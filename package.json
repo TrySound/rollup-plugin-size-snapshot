@@ -5,7 +5,8 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "jest",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepublish": "yarn build"
   },
   "lint-staged": {
     "*.{js,md}": [
