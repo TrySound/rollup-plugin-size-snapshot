@@ -1,0 +1,55 @@
+{
+  "name": "rollup-plugin-size-snapshot",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "flow",
+      [
+        "env",
+        {
+          "targets": {
+            "node": "6"
+          }
+        }
+      ]
+    ]
+  },
+  "repository": "https://github.com/TrySound/rollup-plugin-size-snapshot",
+  "author": "Bogdan Chadkin <trysound@yandex.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^23.0.0-alpha.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.68.0",
+    "husky": "^0.14.3",
+    "jest": "^22.4.2",
+    "lint-staged": "^7.0.0",
+    "prettier": "^1.11.1",
+    "redux": "^3.7.2",
+    "rollup": "^0.57.1",
+    "rollup-plugin-uglify": "^3.0.0",
+    "strip-ansi": "^4.0.0"
+  },
+  "dependencies": {
+    "bytes": "^3.0.0",
+    "chalk": "^2.3.2",
+    "fast-deep-equal": "^1.1.0",
+    "gzip-size": "^4.1.0",
+    "jest-diff": "^22.4.0",
+    "uglify-es": "^3.3.9"
+  }
+}
