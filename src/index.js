@@ -127,7 +127,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         };
 
         let infoString =
-          "Computed sizes\n" +
+          `Computed sizes of "${output}"\n` +
           `  bundled: ${formatSize(sizes.bundled)}\n` +
           `  minified with uglify: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
