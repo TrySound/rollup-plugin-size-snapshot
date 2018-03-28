@@ -18,6 +18,7 @@ type Options = {
 };
 
 type OutputOptions = {
+  format: string,
   file: string
 };
 
@@ -112,6 +113,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
     name: "size-snapshot",
 
     transformBundle(source, outputOptions) {
+      const format = outputOptions.format;
       const output = outputOptions.file;
 
       if (typeof output !== "string") {
@@ -132,7 +134,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
         let infoString =
           "\n" +
-          `Computed sizes of "${output}"\n` +
+          `Computed sizes of "${output}" with "${format}" format\n` +
           `  bundled: ${formatSize(sizes.bundled)}\n` +
           `  minified with uglify: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;

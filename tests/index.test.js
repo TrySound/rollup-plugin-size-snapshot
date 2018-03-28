@@ -65,7 +65,7 @@ test("print sizes", async () => {
 
   expect(last(consoleInfo.mock.calls).map(stripAnsi)).toEqual([
     expect.stringContaining(
-      'Computed sizes of "output.js"\n' +
+      'Computed sizes of "output.js" with "es" format\n' +
         "  bundled: 10,971 B\n" +
         "  minified with uglify: 5,293 B\n" +
         "  minified and gzipped: 2,032 B\n"
@@ -88,7 +88,7 @@ test("print sizes with treeshaked size", async () => {
 
   expect(last(consoleInfo.mock.calls).map(stripAnsi)).toEqual([
     expect.stringContaining(
-      'Computed sizes of "output.js"\n' +
+      'Computed sizes of "output.js" with "es" format\n' +
         "  bundled: 10,971 B\n" +
         "  minified with uglify: 5,293 B\n" +
         "  minified and gzipped: 2,032 B\n" +
