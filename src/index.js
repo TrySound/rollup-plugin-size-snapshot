@@ -54,6 +54,10 @@ const readJsonSync = file => {
   }
 };
 
+const writeJsonSync = (file, data) => {
+  return writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+};
+
 const treeshakeSize = code => {
   const input = "__size_snapshot_input__";
   const entry = "__size_snapshot_entry__";
@@ -144,7 +148,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
             console.info(infoString);
           }
           snapshot[outputOptions.file] = sizes;
-          writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2));
+          writeJsonSync(snapshotPath, snapshot);
         } else {
           const entry = snapshot[output] || {};
           if (!deepEqual(entry, sizes)) {
