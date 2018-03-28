@@ -131,6 +131,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         };
 
         let infoString =
+          "\n" +
           `Computed sizes of "${output}"\n` +
           `  bundled: ${formatSize(sizes.bundled)}\n` +
           `  minified with uglify: ${formatSize(sizes.minified)}\n` +
@@ -141,6 +142,8 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           const msg = "treeshaked and uglified with toplevel option";
           infoString += `  ${msg}: ${formatSize(treeshakedSize)}\n`;
         }
+
+        infoString += "\n";
 
         const snapshot = readJsonSync(snapshotPath);
         if (shouldUpdateSnapshot) {
