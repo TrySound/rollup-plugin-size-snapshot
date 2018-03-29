@@ -2,13 +2,13 @@
 
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { rollup } from "rollup";
 import { minify } from "uglify-es";
 import gzipSize from "gzip-size";
 import deepEqual from "fast-deep-equal";
 import diff from "jest-diff";
 import bytes from "bytes";
 import chalk from "chalk";
+import { treeshakeWithRollup } from "./treeshakeWithRollup";
 
 type Options = {
   treeshake?: boolean,
@@ -59,43 +59,6 @@ const writeJsonSync = (file, data) => {
   return writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
 };
 
-const treeshakeSize = code => {
-  const input = "__size_snapshot_input__";
-  const entry = "__size_snapshot_entry__";
-
-  const isReservedId = id => id === input || id === entry;
-
-  const config = {
-    input,
-    onwarn() {},
-    plugins: [
-      {
-        resolveId(importee) {
-          if (isReservedId(importee)) {
-            return importee;
-          }
-          return null;
-        },
-
-        load(id) {
-          if (id === input) {
-            return `import {} from "${entry}";`;
-          }
-          if (id === entry) {
-            return code;
-          }
-          return null;
-        }
-      }
-    ]
-  };
-
-  return rollup(config)
-    .then(bundle => bundle.generate({ format: "es" }))
-    .then(result => minify(result.code, { toplevel: true }))
-    .then(result => result.code.length);
-};
-
 const bytesConfig = { thousandsSeparator: ",", unitSeparator: " ", unit: "B" };
 
 const formatSize = d => chalk.bold(bytes.format(d, bytesConfig));
@@ -120,15 +83,17 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         throw Error("output file in rollup options should be specified");
       }
 
+      const getSize = code => code.length;
       const minified = minify(source).code;
+      const treeshakeSize = code => treeshakeWithRollup(code).then(getSize);
 
       return Promise.all([
         gzipSize(minified),
         shouldTreeshake ? treeshakeSize(source) : 0
       ]).then(([gzippedSize, treeshakedSize]) => {
         const sizes: Object = {
-          bundled: source.length,
-          minified: minified.length,
+          bundled: getSize(source),
+          minified: getSize(minified),
           gzipped: gzippedSize
         };
 
