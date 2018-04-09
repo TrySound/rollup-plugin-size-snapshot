@@ -12,7 +12,6 @@ import { treeshakeWithRollup } from "./treeshakeWithRollup.js";
 import { treeshakeWithWebpack } from "./treeshakeWithWebpack.js";
 
 type Options = {
-  treeshake?: boolean,
   snapshotPath?: string,
   updateSnapshot?: boolean,
   printInfo?: boolean
@@ -30,7 +29,6 @@ type Plugin = {
 
 const validateOptions = options => {
   const optionsKeys: $ReadOnlyArray<$Keys<Options>> = [
-    "treeshake",
     "snapshotPath",
     "updateSnapshot",
     "printInfo"
@@ -67,7 +65,6 @@ const formatSize = d => chalk.bold(bytes.format(d, bytesConfig));
 export const sizeSnapshot = (options?: Options = {}): Plugin => {
   validateOptions(options);
 
-  const shouldTreeshake = options.treeshake === true;
   const snapshotPath =
     options.snapshotPath || join(process.cwd(), ".size-snapshot.json");
   const shouldUpdateSnapshot = options.updateSnapshot !== false;
@@ -79,6 +76,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
     transformBundle(source, outputOptions) {
       const format = outputOptions.format;
       const output = outputOptions.file;
+      const shouldTreeshake = format === "es";
 
       if (typeof output !== "string") {
         throw Error("output file in rollup options should be specified");

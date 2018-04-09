@@ -3,6 +3,23 @@
 [travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
 [travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
 
+This plugins allows to track sizes of
+
+* actual bundle size
+* minified with uglify size
+* minified and gzipped size
+
+For `es` format it also produces sizes of treeshaked bundle by importing nothing
+
+```js
+import {} from "bundle";
+```
+
+There are two treeshake points
+
+* webpack in production mode
+* rollup + uglify with enabled toplevel option
+
 ## Usage
 
 ```js
@@ -14,7 +31,7 @@ export default {
     file: "dist/index.js",
     format: "es"
   },
-  plugins: [sizeSnapshot({ treeshake: true })]
+  plugins: [sizeSnapshot()]
 };
 ```
 
@@ -31,17 +48,6 @@ export default {
 ```
 
 ## Options
-
-### treeshake
-
-type: `boolean`  
-default: `false`
-
-Creates bundle with `import {} from 'bundle'` entry point to check treeshakability.
-
-1.  run rollup to treeshake whatever it can analyze
-1.  run uglify with `{ toplevel: true }` which looks for pure annotations and analyzes all toplevels which are isolated in bundle
-1.  run webpack in production mode with the same entry point
 
 ### snapshotPath
 
