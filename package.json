@@ -27,6 +27,9 @@
       ]
     ]
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": "https://github.com/TrySound/rollup-plugin-size-snapshot",
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "license": "MIT",
