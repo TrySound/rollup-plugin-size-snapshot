@@ -8,7 +8,8 @@ import deepEqual from "fast-deep-equal";
 import diff from "jest-diff";
 import bytes from "bytes";
 import chalk from "chalk";
-import { treeshakeWithRollup } from "./treeshakeWithRollup";
+import { treeshakeWithRollup } from "./treeshakeWithRollup.js";
+import { treeshakeWithWebpack } from "./treeshakeWithWebpack.js";
 
 type Options = {
   treeshake?: boolean,
@@ -85,12 +86,16 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
       const getSize = code => code.length;
       const minified = minify(source).code;
-      const treeshakeSize = code => treeshakeWithRollup(code).then(getSize);
+      const treeshakeSize = code =>
+        Promise.all([
+          treeshakeWithRollup(code).then(getSize),
+          treeshakeWithWebpack(code).then(getSize)
+        ]);
 
       return Promise.all([
         gzipSize(minified),
-        shouldTreeshake ? treeshakeSize(source) : 0
-      ]).then(([gzippedSize, treeshakedSize]) => {
+        shouldTreeshake ? treeshakeSize(source) : [0, 0]
+      ]).then(([gzippedSize, [rollupSize, webpackSize]]) => {
         const sizes: Object = {
           bundled: getSize(source),
           minified: getSize(minified),
@@ -104,10 +109,19 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           `  minified with uglify: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
 
+        const getMsg = (bundler, size) => {
+          const msg = `treeshaked with ${bundler} and uglified`;
+          return `  ${msg}: ${formatSize(size)}\n`;
+        };
+
         if (shouldTreeshake) {
-          sizes.treeshaked = treeshakedSize;
-          const msg = "treeshaked and uglified with toplevel option";
-          infoString += `  ${msg}: ${formatSize(treeshakedSize)}\n`;
+          sizes.treeshaked = {
+            rollup: rollupSize,
+            webpack: webpackSize
+          };
+
+          infoString += getMsg("rollup", rollupSize);
+          infoString += getMsg("webpack", webpackSize);
         }
 
         infoString += "\n";

@@ -92,7 +92,8 @@ test("print sizes with treeshaked size", async () => {
         "  bundled: 10,971 B\n" +
         "  minified with uglify: 5,293 B\n" +
         "  minified and gzipped: 2,032 B\n" +
-        "  treeshaked and uglified with toplevel option: 0 B\n"
+        "  treeshaked with rollup and uglified: 0 B\n" +
+        "  treeshaked with webpack and uglified: 566 B\n"
     )
   ]);
 
@@ -164,7 +165,7 @@ test("fail with update false if bundled, minified or gziped sizes are not matche
   consoleError.mockRestore();
 });
 
-test("write treeshaked with rollup size", async () => {
+test("write treeshaked with rollup and webpack sizes", async () => {
   const snapshotPath = "fixtures/rollupTreeshake.size-snapshot.json";
   const snapshot = await runRollup({
     input: "fixtures/redux.js",
@@ -175,13 +176,16 @@ test("write treeshaked with rollup size", async () => {
   expect(pullSnapshot(snapshotPath)).toEqual(
     expect.objectContaining({
       "output.js": expect.objectContaining({
-        treeshaked: 0
+        treeshaked: {
+          rollup: 0,
+          webpack: 566
+        }
       })
     })
   );
 });
 
-test("treeshake pure annotations with rollup and uglify under the hood", async () => {
+test("treeshake pure annotations with rollup, webpack and uglify", async () => {
   const snapshotPath = "fixtures/pure-annotated.size-snapshot.json";
   await runRollup({
     input: "fixtures/pure-annotated.js",
@@ -192,13 +196,16 @@ test("treeshake pure annotations with rollup and uglify under the hood", async (
   expect(pullSnapshot(snapshotPath)).toEqual(
     expect.objectContaining({
       "output.js": expect.objectContaining({
-        treeshaked: 0
+        treeshaked: {
+          rollup: 0,
+          webpack: 566
+        }
       })
     })
   );
 });
 
-test("treeshake with rollup and external modules", async () => {
+test("treeshake with rollup or webpack and external modules", async () => {
   const snapshotPath = "fixtures/externals.size-snapshot.json";
   await runRollup({
     input: "fixtures/externals.js",
@@ -210,14 +217,11 @@ test("treeshake with rollup and external modules", async () => {
   expect(pullSnapshot(snapshotPath)).toEqual(
     expect.objectContaining({
       "output.js": expect.objectContaining({
-        treeshaked: 14
+        treeshaked: {
+          rollup: 14,
+          webpack: 613
+        }
       })
     })
   );
 });
-
-test.skip("write treeshaked with webpack size", () => {});
-
-test.skip("fail if webpack is not installed", () => {});
-
-test.skip("skip when webpack is not installed and remove treeshaked size if option is false", () => {});

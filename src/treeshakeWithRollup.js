@@ -2,11 +2,12 @@
 
 import { rollup } from "rollup";
 import { minify } from "uglify-es";
+import { isExternal } from "./utils.js";
 
-const input = "__size_snapshot_input__";
-const entry = "__size_snapshot_entry__";
+const inputName = "__size_snapshot_input__.js";
+const bundleName = "__size_snapshot_bundle__.js";
 
-const isReservedId = id => id === input || id === entry;
+const isReservedId = id => id.includes(inputName) || id.includes(bundleName);
 
 const resolvePlugin = ({ code }) => ({
   resolveId(importee) {
@@ -17,10 +18,10 @@ const resolvePlugin = ({ code }) => ({
   },
 
   load(id) {
-    if (id === input) {
-      return `import {} from "${entry}";`;
+    if (id.includes(inputName)) {
+      return `import {} from "/${bundleName}";`;
     }
-    if (id === entry) {
+    if (id.includes(bundleName)) {
       return code;
     }
     return null;
@@ -29,8 +30,9 @@ const resolvePlugin = ({ code }) => ({
 
 export const treeshakeWithRollup = (code: string) => {
   const config = {
-    input,
+    input: `/${inputName}`,
     onwarn() {},
+    external: isExternal,
     plugins: [resolvePlugin({ code })]
   };
 

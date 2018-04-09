@@ -26,7 +26,7 @@ import { sizeSnapshot } from "rollup-plugin-size-snapshot";
 
 export default {
   // ...
-  plugins: [sizeSnapshot({ treeshake: true }), uglify({ toplevel: true })]
+  plugins: [sizeSnapshot(), uglify({ toplevel: true })]
 };
 ```
 
@@ -41,6 +41,7 @@ Creates bundle with `import {} from 'bundle'` entry point to check treeshakabili
 
 1.  run rollup to treeshake whatever it can analyze
 1.  run uglify with `{ toplevel: true }` which looks for pure annotations and analyzes all toplevels which are isolated in bundle
+1.  run webpack in production mode with the same entry point
 
 ### snapshotPath
 

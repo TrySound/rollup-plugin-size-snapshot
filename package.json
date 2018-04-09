@@ -51,6 +51,8 @@
     "fast-deep-equal": "^1.1.0",
     "gzip-size": "^4.1.0",
     "jest-diff": "^22.4.0",
-    "uglify-es": "^3.3.9"
+    "memory-fs": "^0.4.1",
+    "uglify-es": "^3.3.9",
+    "webpack": "^4.5.0"
   }
 }
