@@ -107,8 +107,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           `  minified with uglify: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
 
-        const getMsg = (bundler, size) => {
-          const msg = `treeshaked with ${bundler} and uglified`;
+        const formatMsg = (msg, size) => {
           return `  ${msg}: ${formatSize(size)}\n`;
         };
 
@@ -118,8 +117,14 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
             webpack: webpackSize
           };
 
-          infoString += getMsg("rollup", rollupSize);
-          infoString += getMsg("webpack", webpackSize);
+          infoString += formatMsg(
+            "treeshaked with rollup and uglified",
+            rollupSize
+          );
+          infoString += formatMsg(
+            "treeshaked with webpack in production mode",
+            webpackSize
+          );
         }
 
         infoString += "\n";

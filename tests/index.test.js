@@ -158,7 +158,7 @@ test("print sizes with treeshaked size for 'es' format", async () => {
         "  minified with uglify: 5,293 B\n" +
         "  minified and gzipped: 2,032 B\n" +
         "  treeshaked with rollup and uglified: 0 B\n" +
-        "  treeshaked with webpack and uglified: 566 B\n"
+        "  treeshaked with webpack in production mode: 566 B\n"
     )
   ]);
 
