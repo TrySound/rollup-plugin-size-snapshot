@@ -1,15 +1,13 @@
 // @flow
 
-import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { minify } from "uglify-es";
 import gzipSize from "gzip-size";
-import deepEqual from "fast-deep-equal";
-import diff from "jest-diff";
 import bytes from "bytes";
 import chalk from "chalk";
 import { treeshakeWithRollup } from "./treeshakeWithRollup.js";
 import { treeshakeWithWebpack } from "./treeshakeWithWebpack.js";
+import * as snapshot from "./snapshot.js";
 
 type Options = {
   snapshotPath?: string,
@@ -43,19 +41,6 @@ const validateOptions = options => {
       `Options ${invalidKeys.map(d => `"${d}"`).join(", ")} are invalid`
     );
   }
-};
-
-const readJsonSync = file => {
-  try {
-    const text = readFileSync(file, "utf-8");
-    return JSON.parse(text);
-  } catch (error) {
-    return {};
-  }
-};
-
-const writeJsonSync = (file, data) => {
-  return writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
 };
 
 const bytesConfig = { thousandsSeparator: ",", unitSeparator: " ", unit: "B" };
@@ -129,19 +114,14 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
         infoString += "\n";
 
-        const snapshot = readJsonSync(snapshotPath);
+        const snapshotParams = { snapshotPath, name: output, data: sizes };
         if (shouldMatchSnapshot) {
-          const entry = snapshot[output] || {};
-          if (!deepEqual(entry, sizes)) {
-            console.error(diff(entry, sizes));
-            throw Error("size snapshot is not matched");
-          }
+          snapshot.match(snapshotParams);
         } else {
           if (shouldPrintInfo) {
             console.info(infoString);
           }
-          snapshot[outputOptions.file] = sizes;
-          writeJsonSync(snapshotPath, snapshot);
+          snapshot.write(snapshotParams);
         }
 
         return null;
