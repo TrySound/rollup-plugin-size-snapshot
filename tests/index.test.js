@@ -225,3 +225,23 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     })
   );
 });
+
+test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async () => {
+  const snapshotPath = "fixtures/node_env.size-snapshot.json";
+  await runRollup({
+    input: "fixtures/node_env.js",
+    output: { file: "output.js", format: "es" },
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+  });
+
+  expect(pullSnapshot(snapshotPath)).toEqual(
+    expect.objectContaining({
+      "output.js": expect.objectContaining({
+        treeshaked: {
+          rollup: 0,
+          webpack: 566
+        }
+      })
+    })
+  );
+});

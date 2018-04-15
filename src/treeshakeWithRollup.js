@@ -2,6 +2,7 @@
 
 import { rollup } from "rollup";
 import { minify } from "uglify-es";
+import replace from "rollup-plugin-replace";
 import { isExternal } from "./utils.js";
 
 const inputName = "__size_snapshot_input__.js";
@@ -33,7 +34,10 @@ export const treeshakeWithRollup = (code: string) => {
     input: `/${inputName}`,
     onwarn() {},
     external: isExternal,
-    plugins: [resolvePlugin({ code })]
+    plugins: [
+      resolvePlugin({ code }),
+      replace({ "process.env.NODE_ENV": JSON.stringify("production") })
+    ]
   };
 
   return rollup(config)
