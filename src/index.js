@@ -13,7 +13,7 @@ import { treeshakeWithWebpack } from "./treeshakeWithWebpack.js";
 
 type Options = {
   snapshotPath?: string,
-  updateSnapshot?: boolean,
+  matchSnapshot?: boolean,
   printInfo?: boolean
 };
 
@@ -30,7 +30,7 @@ type Plugin = {
 const validateOptions = options => {
   const optionsKeys: $ReadOnlyArray<$Keys<Options>> = [
     "snapshotPath",
-    "updateSnapshot",
+    "matchSnapshot",
     "printInfo"
   ];
 
@@ -67,7 +67,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
   const snapshotPath =
     options.snapshotPath || join(process.cwd(), ".size-snapshot.json");
-  const shouldUpdateSnapshot = options.updateSnapshot !== false;
+  const shouldMatchSnapshot = options.matchSnapshot === true;
   const shouldPrintInfo = options.printInfo !== false;
 
   return {
@@ -130,18 +130,18 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         infoString += "\n";
 
         const snapshot = readJsonSync(snapshotPath);
-        if (shouldUpdateSnapshot) {
-          if (shouldPrintInfo) {
-            console.info(infoString);
-          }
-          snapshot[outputOptions.file] = sizes;
-          writeJsonSync(snapshotPath, snapshot);
-        } else {
+        if (shouldMatchSnapshot) {
           const entry = snapshot[output] || {};
           if (!deepEqual(entry, sizes)) {
             console.error(diff(entry, sizes));
             throw Error("size snapshot is not matched");
           }
+        } else {
+          if (shouldPrintInfo) {
+            console.info(infoString);
+          }
+          snapshot[outputOptions.file] = sizes;
+          writeJsonSync(snapshotPath, snapshot);
         }
 
         return null;

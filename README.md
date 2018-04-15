@@ -54,12 +54,12 @@ export default {
 type: `string`  
 default: `'.size-snapshot.json'`
 
-### updateSnapshot
+### matchSnapshot
 
-Depending on this value snapshot is automatically updated or compared with runtime result. Usefull to check contributors on CI.
+If this value is `true` new snapshot is compared with existing one and is not written to the disk. Usefull to check contributors on CI.
 
 type: `boolean`  
-default: `true`
+default: `false`
 
 ### printInfo
 

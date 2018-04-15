@@ -27,7 +27,7 @@ test("fail on invalid options", () => {
     sizeSnapshot({
       minify: true,
       snapshot: "",
-      updateSnapshot: true
+      matchSnapshot: false
     });
   }).toThrowError(/Options "minify", "snapshot" are invalid/);
 });
@@ -120,7 +120,7 @@ test("fail with update false if bundled, minified or gziped sizes are not matche
     await runRollup({
       input: "fixtures/redux.js",
       output: { file: "output.js", format: "es" },
-      plugins: [sizeSnapshot({ snapshotPath, updateSnapshot: false })]
+      plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })]
     });
     expect(true).toBe(false);
   } catch (error) {
