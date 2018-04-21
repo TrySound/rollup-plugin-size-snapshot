@@ -112,8 +112,6 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           );
         }
 
-        infoString += "\n";
-
         const snapshotParams = { snapshotPath, name: output, data: sizes };
         if (shouldMatchSnapshot) {
           snapshot.match(snapshotParams);
