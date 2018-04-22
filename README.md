@@ -3,22 +3,15 @@
 [travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
 [travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
 
-This plugins allows to track sizes of
+This provides the information about
 
-* actual bundle size
-* minified with uglify size
-* minified and gzipped size
+* actual bundle size which will consume user bundler
+* minified bundle size which will parse browsers in production
+* gzipped size which will be loaded in production
 
-For `es` format it also produces sizes of treeshaked bundle by importing nothing
+All these sizes are improtant criteria to choose the library and user will see these criteria in `.size-snapshot.json` file.
 
-```js
-import {} from "bundle";
-```
-
-There are two treeshake points
-
-* webpack in production mode
-* rollup + uglify with enabled toplevel option
+Also there is a nice feature for `es` output format which provides sizes of treeshaked bundle with both rollup and webpack, so if your library have more than one independant parts you can track that user will not consume dead code.
 
 ## Usage
 
@@ -56,7 +49,7 @@ default: `'.size-snapshot.json'`
 
 ### matchSnapshot
 
-If this value is `true` new snapshot is compared with existing one and is not written to the disk. Usefull to check contributors on CI.
+This option allows to check that contributor do not forget to build or to commit `.size-snapshot.json` file. If this is `true` the plugin will match existing snapshot and the new one.
 
 type: `boolean`  
 default: `false`
