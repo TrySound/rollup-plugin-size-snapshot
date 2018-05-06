@@ -245,3 +245,23 @@ test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async ()
     })
   );
 });
+
+test("webpack does not provide setImmediate shim", async () => {
+  const snapshotPath = "fixtures/setImmediate.size-snapshot.json";
+  await runRollup({
+    input: "fixtures/setImmediate.js",
+    output: { file: "output.js", format: "es" },
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+  });
+
+  expect(pullSnapshot(snapshotPath)).toEqual(
+    expect.objectContaining({
+      "output.js": expect.objectContaining({
+        treeshaked: {
+          rollup: 21,
+          webpack: 607
+        }
+      })
+    })
+  );
+});

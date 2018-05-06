@@ -19,6 +19,9 @@ export const treeshakeWithWebpack = (code: string): Promise<string> => {
       filename: outputName
     },
     mode: "production",
+    node: {
+      setImmediate: false
+    },
     externals: [
       (context, request, callback) => {
         if (isExternal(request)) {
