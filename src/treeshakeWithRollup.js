@@ -1,7 +1,7 @@
 // @flow
 
 import { rollup } from "rollup";
-import { minify } from "uglify-es";
+import { minify } from "terser";
 import replace from "rollup-plugin-replace";
 import { isExternal } from "./utils.js";
 

@@ -1,7 +1,7 @@
 // @flow
 
 import { join } from "path";
-import { minify } from "uglify-es";
+import { minify } from "terser";
 import gzipSize from "gzip-size";
 import bytes from "bytes";
 import chalk from "chalk";
@@ -89,7 +89,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           "\n" +
           `Computed sizes of "${output}" with "${format}" format\n` +
           `  bundled: ${formatSize(sizes.bundled)}\n` +
-          `  minified with uglify: ${formatSize(sizes.minified)}\n` +
+          `  minified with terser: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
 
         const formatMsg = (msg, size) => {
@@ -103,7 +103,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           };
 
           infoString += formatMsg(
-            "treeshaked with rollup and uglified",
+            "treeshaked with rollup and minified",
             rollupSize
           );
           infoString += formatMsg(

@@ -28,10 +28,11 @@ export default {
 };
 ```
 
-If you use uglify plugin then make sure it is placed after this one
+If you use uglify or terser plugins then make sure they are placed after this one
 
 ```js
-import uglify from "rollup-plugin-uglify";
+import { uglify } from "rollup-plugin-uglify";
+// or import { terser } from "rollup-plugin-terser";
 import { sizeSnapshot } from "rollup-plugin-size-snapshot";
 
 export default {

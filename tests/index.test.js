@@ -2,7 +2,7 @@
 
 import { readFileSync, unlinkSync } from "fs";
 import { rollup } from "rollup";
-import uglify from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser";
 import { sizeSnapshot } from "../src";
 import stripAnsi from "strip-ansi";
 
@@ -67,7 +67,7 @@ test("print sizes", async () => {
     expect.stringContaining(
       'Computed sizes of "output.js" with "cjs" format\n' +
         "  bundled: 11,160 B\n" +
-        "  minified with uglify: 5,464 B\n" +
+        "  minified with terser: 5,464 B\n" +
         "  minified and gzipped: 2,091 B\n"
     )
   ]);
@@ -75,12 +75,12 @@ test("print sizes", async () => {
   consoleInfo.mockRestore();
 });
 
-test("not affected by following uglify plugin", async () => {
-  const snapshotPath = "fixtures/uglify.size-snapshot.json";
+test("not affected by following terser plugin", async () => {
+  const snapshotPath = "fixtures/terser.size-snapshot.json";
   await runRollup({
     input: "fixtures/redux.js",
     output: { file: "output.js", format: "cjs" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false }), uglify()]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false }), terser()]
   });
 
   expect(pullSnapshot(snapshotPath)).toEqual(
@@ -155,9 +155,9 @@ test("print sizes with treeshaked size for 'es' format", async () => {
     expect.stringContaining(
       'Computed sizes of "output.js" with "es" format\n' +
         "  bundled: 10,971 B\n" +
-        "  minified with uglify: 5,293 B\n" +
+        "  minified with terser: 5,293 B\n" +
         "  minified and gzipped: 2,032 B\n" +
-        "  treeshaked with rollup and uglified: 0 B\n" +
+        "  treeshaked with rollup and minified: 0 B\n" +
         "  treeshaked with webpack in production mode: 566 B\n"
     )
   ]);
@@ -185,7 +185,7 @@ test("write treeshaked with rollup and webpack sizes for 'es' format", async () 
   );
 });
 
-test("treeshake pure annotations with rollup and uglify or webpack", async () => {
+test("treeshake pure annotations with rollup and terser or webpack", async () => {
   const snapshotPath = "fixtures/pure-annotated.size-snapshot.json";
   await runRollup({
     input: "fixtures/pure-annotated.js",
