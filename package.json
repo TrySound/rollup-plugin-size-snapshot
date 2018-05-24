@@ -16,9 +16,9 @@
   },
   "babel": {
     "presets": [
-      "flow",
+      "@babel/flow",
       [
-        "env",
+        "@babel/env",
         {
           "targets": {
             "node": "6"
@@ -34,11 +34,12 @@
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
+    "@babel/cli": "^7.0.0-beta.48",
+    "@babel/core": "^7.0.0-beta.48",
+    "@babel/preset-env": "^7.0.0-beta.48",
+    "@babel/preset-flow": "^7.0.0-beta.48",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.0.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.68.0",
     "husky": "^0.14.3",
     "jest": "^23.0.0",
