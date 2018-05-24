@@ -1,15 +1,15 @@
 {
   "output.js": {
-    "bundled": 10971,
-    "minified": 5293,
-    "gzipped": 2032,
+    "bundled": 10000,
+    "minified": 6000,
+    "gzipped": 2000,
     "treeshaked": {
       "rollup": {
-        "code": 0,
-        "import_statements": 0
+        "code": 500,
+        "import_statements": -500
       },
       "webpack": {
-        "code": 566
+        "code": 0
       }
     }
   }

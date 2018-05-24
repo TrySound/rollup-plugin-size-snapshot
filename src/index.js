@@ -12,6 +12,7 @@ import * as snapshot from "./snapshot.js";
 type Options = {
   snapshotPath?: string,
   matchSnapshot?: boolean,
+  threshold?: number,
   printInfo?: boolean
 };
 
@@ -29,6 +30,7 @@ const validateOptions = options => {
   const optionsKeys: $ReadOnlyArray<$Keys<Options>> = [
     "snapshotPath",
     "matchSnapshot",
+    "threshold",
     "printInfo"
   ];
 
@@ -58,6 +60,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
     options.snapshotPath || join(process.cwd(), ".size-snapshot.json");
   const shouldMatchSnapshot = options.matchSnapshot === true;
   const shouldPrintInfo = options.printInfo !== false;
+  const threshold = options.threshold == null ? 0 : options.threshold;
 
   return {
     name: "size-snapshot",
@@ -120,7 +123,12 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           );
         }
 
-        const snapshotParams = { snapshotPath, name: output, data: sizes };
+        const snapshotParams = {
+          snapshotPath,
+          name: output,
+          data: sizes,
+          threshold
+        };
         if (shouldMatchSnapshot) {
           snapshot.match(snapshotParams);
         } else {

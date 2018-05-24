@@ -55,6 +55,15 @@ This option allows to check that contributor do not forget to build or to commit
 type: `boolean`  
 default: `false`
 
+### threshold
+
+Possible difference between sizes in actual snapshot and generated one.
+
+Note: Make sense only when `matchSnapshot` is `true`.
+
+type: `number`  
+default: `0`
+
 ### printInfo
 
 Allows to disable log to terminal.

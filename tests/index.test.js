@@ -273,6 +273,7 @@ test("rollup treeshaker shows imports size", async () => {
 
 test("fail when matching missing snapshot", async () => {
   const snapshotPath = "fixtures/missing.size-snapshot.json";
+
   try {
     await runRollup({
       input: "./fixtures/redux.js",
@@ -281,10 +282,50 @@ test("fail when matching missing snapshot", async () => {
         sizeSnapshot({ snapshotPath, matchSnapshot: true, printInfo: false })
       ]
     });
+
     expect(true).toBe(false);
   } catch (error) {
     expect(error.message).toContain(
       "Size snapshot is missing. Please run rollup to create one."
     );
   }
+});
+
+test("match snapshot with threshold", async () => {
+  const snapshotPath = "fixtures/threshold.size-snapshot.json";
+  const errorFn = jest.spyOn(console, "error").mockImplementation(() => {});
+
+  await runRollup({
+    input: "./fixtures/redux.js",
+    output: { file: "output.js", format: "esm" },
+    plugins: [
+      sizeSnapshot({
+        snapshotPath,
+        matchSnapshot: true,
+        threshold: 1000,
+        printInfo: false
+      })
+    ]
+  });
+
+  try {
+    await runRollup({
+      input: "./fixtures/redux.js",
+      output: { file: "output.js", format: "esm" },
+      plugins: [
+        sizeSnapshot({
+          snapshotPath,
+          matchSnapshot: true,
+          threshold: 100,
+          printInfo: false
+        })
+      ]
+    });
+
+    expect(true).toBe(false);
+  } catch (error) {
+    expect(error.message).toContain("Size snapshot is not matched");
+  }
+
+  errorFn.mockRestore();
 });

@@ -52,7 +52,6 @@
   "dependencies": {
     "bytes": "^3.0.0",
     "chalk": "^2.3.2",
-    "fast-deep-equal": "^1.1.0",
     "gzip-size": "^4.1.0",
     "jest-diff": "^23.0.0",
     "memory-fs": "^0.4.1",
