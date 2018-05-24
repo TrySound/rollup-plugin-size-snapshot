@@ -32,6 +32,12 @@ test("fail on invalid options", () => {
       matchSnapshot: false
     });
   }).toThrowError(/Options "minify", "snapshot" are invalid/);
+
+  expect(() => {
+    sizeSnapshot({
+      minify: true
+    });
+  }).toThrowError(/Option "minify" is invalid/);
 });
 
 test("write bundled, minified and gzipped size of es bundle", async () => {
@@ -105,7 +111,7 @@ test("fail if output.file is not specified", async () => {
   }
 });
 
-test("fail with update false if bundled, minified or gziped sizes are not matched", async () => {
+test("match bundled, minified or gziped sizes", async () => {
   const consoleError = jest
     .spyOn(console, "error")
     .mockImplementation(() => {});
@@ -118,7 +124,9 @@ test("fail with update false if bundled, minified or gziped sizes are not matche
     });
     expect(true).toBe(false);
   } catch (error) {
-    expect(error.message).toContain("size snapshot is not matched");
+    expect(error.message).toContain(
+      "Size snapshot is not matched. Run rollup to rebuild one."
+    );
   }
   const arg = lastCallArg(consoleError);
   expect(arg).toContain(`+   "bundled": 10971`);
@@ -261,4 +269,22 @@ test("rollup treeshaker shows imports size", async () => {
     "  treeshaked with rollup and minified: 145 B\n" +
       "    import statements size: 145 B\n"
   );
+});
+
+test("fail when matching missing snapshot", async () => {
+  const snapshotPath = "fixtures/missing.size-snapshot.json";
+  try {
+    await runRollup({
+      input: "./fixtures/redux.js",
+      output: { file: "output.js", format: "esm" },
+      plugins: [
+        sizeSnapshot({ snapshotPath, matchSnapshot: true, printInfo: false })
+      ]
+    });
+    expect(true).toBe(false);
+  } catch (error) {
+    expect(error.message).toContain(
+      "Size snapshot is missing. Please run rollup to create one."
+    );
+  }
 });

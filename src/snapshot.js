@@ -13,9 +13,13 @@ type Params = {|
 const readJsonSync = file => {
   try {
     const text = readFileSync(file, "utf-8");
-    return JSON.parse(text);
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      return {};
+    }
   } catch (error) {
-    return {};
+    return null;
   }
 };
 
@@ -24,15 +28,18 @@ const writeJsonSync = (file, data) =>
 
 export const match = ({ snapshotPath, name, data }: Params) => {
   const snapshot = readJsonSync(snapshotPath);
+  if (snapshot == null) {
+    throw Error("Size snapshot is missing. Please run rollup to create one.");
+  }
   const prevData = snapshot[name] || {};
   if (!deepEqual(prevData, data)) {
     console.error(diff(prevData, data));
-    throw Error("size snapshot is not matched");
+    throw Error("Size snapshot is not matched. Run rollup to rebuild one.");
   }
 };
 
 export const write = ({ snapshotPath, name, data }: Params) => {
-  const snapshot = readJsonSync(snapshotPath);
+  const snapshot = readJsonSync(snapshotPath) || {};
   snapshot[name] = data;
   writeJsonSync(snapshotPath, snapshot);
 };

@@ -36,10 +36,14 @@ const validateOptions = options => {
     d => !optionsKeys.includes(d)
   );
 
-  if (invalidKeys.length) {
-    throw Error(
-      `Options ${invalidKeys.map(d => `"${d}"`).join(", ")} are invalid`
-    );
+  const wrap = d => `"${d}"`;
+
+  if (1 === invalidKeys.length) {
+    throw Error(`Option ${wrap(invalidKeys[0])} is invalid`);
+  }
+
+  if (1 < invalidKeys.length) {
+    throw Error(`Options ${invalidKeys.map(wrap).join(", ")} are invalid`);
   }
 };
 
