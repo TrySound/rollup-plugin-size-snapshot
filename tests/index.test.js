@@ -10,6 +10,8 @@ process.chdir("tests");
 
 const last = arr => arr[Math.max(0, arr.length - 1)];
 
+const lastCallArg = mockFn => last(mockFn.mock.calls)[0];
+
 const runRollup = async options => {
   const bundle = await rollup(options);
   const result = await bundle.generate(options.output);
@@ -41,15 +43,13 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
   });
   const snapshot = pullSnapshot(snapshotPath);
 
-  expect(snapshot).toEqual(
-    expect.objectContaining({
-      "output.js": {
-        bundled: 11160,
-        minified: 5464,
-        gzipped: 2091
-      }
-    })
-  );
+  expect(snapshot).toMatchObject({
+    "output.js": {
+      bundled: 11160,
+      minified: 5464,
+      gzipped: 2091
+    }
+  });
 });
 
 test("print sizes", async () => {
@@ -63,14 +63,12 @@ test("print sizes", async () => {
 
   pullSnapshot(snapshotPath);
 
-  expect(last(consoleInfo.mock.calls).map(stripAnsi)).toEqual([
-    expect.stringContaining(
-      'Computed sizes of "output.js" with "cjs" format\n' +
-        "  bundled: 11,160 B\n" +
-        "  minified with terser: 5,464 B\n" +
-        "  minified and gzipped: 2,091 B\n"
-    )
-  ]);
+  expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
+    'Computed sizes of "output.js" with "cjs" format\n' +
+      "  bundled: 11,160 B\n" +
+      "  minified with terser: 5,464 B\n" +
+      "  minified and gzipped: 2,091 B\n"
+  );
 
   consoleInfo.mockRestore();
 });
@@ -83,15 +81,13 @@ test("not affected by following terser plugin", async () => {
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false }), terser()]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": {
-        bundled: 11160,
-        minified: 5464,
-        gzipped: 2091
-      }
-    })
-  );
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": {
+      bundled: 11160,
+      minified: 5464,
+      gzipped: 2091
+    }
+  });
 });
 
 test("fail if output.file is not specified", async () => {
@@ -103,10 +99,8 @@ test("fail if output.file is not specified", async () => {
     });
     expect(true).toBe(false);
   } catch (error) {
-    expect(error.message).toEqual(
-      expect.stringContaining(
-        "output file in rollup options should be specified"
-      )
+    expect(error.message).toContain(
+      "output file in rollup options should be specified"
     );
   }
 });
@@ -124,19 +118,12 @@ test("fail with update false if bundled, minified or gziped sizes are not matche
     });
     expect(true).toBe(false);
   } catch (error) {
-    expect(error.message).toEqual(
-      expect.stringContaining("size snapshot is not matched")
-    );
+    expect(error.message).toContain("size snapshot is not matched");
   }
-  expect(consoleError).lastCalledWith(
-    expect.stringContaining(`+   "bundled": 10971`)
-  );
-  expect(consoleError).lastCalledWith(
-    expect.stringContaining(`+   "minified": 5293`)
-  );
-  expect(consoleError).lastCalledWith(
-    expect.stringContaining(`+   "gzipped": 2032`)
-  );
+  const arg = lastCallArg(consoleError);
+  expect(arg).toContain(`+   "bundled": 10971`);
+  expect(arg).toContain(`+   "minified": 5293`);
+  expect(arg).toContain(`+   "gzipped": 2032`);
   consoleError.mockRestore();
 });
 
@@ -151,18 +138,12 @@ test("print sizes with treeshaked size for 'esm' format", async () => {
 
   pullSnapshot(snapshotPath);
 
-  const args = last(consoleInfo.mock.calls).map(stripAnsi);
-  expect(args).toEqual([
-    expect.stringContaining('Computed sizes of "output.js" with "esm" format\n')
-  ]);
-  expect(args).toEqual([
-    expect.stringContaining("  treeshaked with rollup and minified: 0 B\n")
-  ]);
-  expect(args).toEqual([
-    expect.stringContaining(
-      "  treeshaked with webpack in production mode: 566 B\n"
-    )
-  ]);
+  const arg = stripAnsi(lastCallArg(consoleInfo));
+  expect(arg).toContain('Computed sizes of "output.js" with "esm" format\n');
+  expect(arg).toContain("  treeshaked with rollup and minified: 0 B\n");
+  expect(arg).toContain(
+    "  treeshaked with webpack in production mode: 566 B\n"
+  );
 
   consoleInfo.mockRestore();
 });
@@ -175,16 +156,14 @@ test("write treeshaked with rollup and webpack sizes for 'esm' format", async ()
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: {
-          rollup: expect.objectContaining({ code: 0 }),
-          webpack: expect.objectContaining({ code: 566 })
-        }
-      })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: {
+        rollup: expect.objectContaining({ code: 0 }),
+        webpack: expect.objectContaining({ code: 566 })
+      }
     })
-  );
+  });
 });
 
 test("treeshake pure annotations with rollup and terser or webpack", async () => {
@@ -195,16 +174,14 @@ test("treeshake pure annotations with rollup and terser or webpack", async () =>
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: {
-          rollup: expect.objectContaining({ code: 0 }),
-          webpack: expect.objectContaining({ code: 566 })
-        }
-      })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: {
+        rollup: expect.objectContaining({ code: 0 }),
+        webpack: expect.objectContaining({ code: 566 })
+      }
     })
-  );
+  });
 });
 
 test("treeshake with both rollup or webpack and external modules", async () => {
@@ -216,16 +193,14 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: {
-          rollup: expect.objectContaining({ code: 14 }),
-          webpack: expect.objectContaining({ code: 613 })
-        }
-      })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: {
+        rollup: expect.objectContaining({ code: 14 }),
+        webpack: expect.objectContaining({ code: 613 })
+      }
     })
-  );
+  });
 });
 
 test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async () => {
@@ -236,16 +211,14 @@ test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async ()
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: {
-          rollup: expect.objectContaining({ code: 0 }),
-          webpack: expect.objectContaining({ code: 566 })
-        }
-      })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: {
+        rollup: expect.objectContaining({ code: 0 }),
+        webpack: expect.objectContaining({ code: 566 })
+      }
     })
-  );
+  });
 });
 
 test("webpack does not provide setImmediate shim", async () => {
@@ -256,15 +229,13 @@ test("webpack does not provide setImmediate shim", async () => {
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: expect.objectContaining({
-          webpack: { code: 607 }
-        })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: expect.objectContaining({
+        webpack: { code: 607 }
       })
     })
-  );
+  });
 });
 
 test("rollup treeshaker shows imports size", async () => {
@@ -277,20 +248,17 @@ test("rollup treeshaker shows imports size", async () => {
     plugins: [sizeSnapshot({ snapshotPath })]
   });
 
-  expect(pullSnapshot(snapshotPath)).toEqual(
-    expect.objectContaining({
-      "output.js": expect.objectContaining({
-        treeshaked: expect.objectContaining({
-          rollup: { code: 145, import_statements: 145 }
-        })
+  expect(pullSnapshot(snapshotPath)).toMatchObject({
+    "output.js": expect.objectContaining({
+      treeshaked: expect.objectContaining({
+        rollup: { code: 145, import_statements: 145 }
       })
     })
+  });
+  // $FlowFixMe
+  expect(infoFn).toBeCalledTimes(1);
+  expect(stripAnsi(lastCallArg(infoFn))).toContain(
+    "  treeshaked with rollup and minified: 145 B\n" +
+      "    import statements size: 145 B\n"
   );
-  expect(infoFn).toHaveBeenCalledTimes(1);
-  expect(last(infoFn.mock.calls).map(stripAnsi)).toEqual([
-    expect.stringContaining(
-      "  treeshaked with rollup and minified: 145 B\n" +
-        "    import statements size: 145 B\n"
-    )
-  ]);
 });
