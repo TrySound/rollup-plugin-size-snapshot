@@ -2,6 +2,7 @@
 
 import { rollup } from "rollup";
 import { minify } from "terser";
+import { parse } from "acorn";
 import replace from "rollup-plugin-replace";
 import { isExternal } from "./utils.js";
 
@@ -47,15 +48,14 @@ export const treeshakeWithRollup = (code: string): Promise<Output> => {
 
   return rollup(config)
     .then(bundle => bundle.generate({ format: "es" }))
-    .then(result =>
-      minify(result.code, { toplevel: true, output: { ast: true } })
-    )
+    .then(result => minify(result.code, { toplevel: true }))
     .then((result): Output => {
-      const import_statements = result.ast.body
+      const ast = parse(result.code, { sourceType: "module" });
+      const import_statements = ast.body
         // collect all toplevel import statements
-        .filter(node => node.module_name != null)
+        .filter(node => node.type === "ImportDeclaration")
         // endpos is the next character after node -> substract 1
-        .map(node => node.end.endpos - 1 - node.start.pos)
+        .map(node => node.end - node.start)
         .reduce((acc, size) => acc + size, 0);
 
       return {

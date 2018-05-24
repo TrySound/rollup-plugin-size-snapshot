@@ -259,15 +259,15 @@ test("rollup treeshaker shows imports size", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        rollup: { code: 145, import_statements: 145 }
+        rollup: { code: 338, import_statements: 338 }
       })
     })
   });
   // $FlowFixMe
   expect(infoFn).toBeCalledTimes(1);
   expect(stripAnsi(lastCallArg(infoFn))).toContain(
-    "  treeshaked with rollup and minified: 145 B\n" +
-      "    import statements size: 145 B\n"
+    "  treeshaked with rollup and minified: 338 B\n" +
+      "    import statements size: 338 B\n"
   );
 });
 
