@@ -67,27 +67,27 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         throw Error("output file in rollup options should be specified");
       }
 
-      const getSize = code => code.length;
       const minified = minify(source).code;
       const treeshakeSize = code =>
-        Promise.all([
-          treeshakeWithRollup(code).then(getSize),
-          treeshakeWithWebpack(code).then(getSize)
-        ]);
+        Promise.all([treeshakeWithRollup(code), treeshakeWithWebpack(code)]);
 
       return Promise.all([
         gzipSize(minified),
-        shouldTreeshake ? treeshakeSize(source) : [0, 0]
+        shouldTreeshake
+          ? treeshakeSize(source)
+          : [{ code: 0, import_statements: 0 }, { code: 0 }]
       ]).then(([gzippedSize, [rollupSize, webpackSize]]) => {
         const sizes: Object = {
-          bundled: getSize(source),
-          minified: getSize(minified),
+          bundled: source.length,
+          minified: minified.length,
           gzipped: gzippedSize
         };
 
         let infoString =
           "\n" +
-          `Computed sizes of "${output}" with "${format}" format\n` +
+          `Computed sizes of "${output}" with "${
+            format === "es" ? "esm" : format
+          }" format\n` +
           `  bundled: ${formatSize(sizes.bundled)}\n` +
           `  minified with terser: ${formatSize(sizes.minified)}\n` +
           `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
@@ -104,11 +104,15 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
           infoString += formatMsg(
             "treeshaked with rollup and minified",
-            rollupSize
+            rollupSize.code
+          );
+          infoString += formatMsg(
+            "  import statements size",
+            rollupSize.import_statements
           );
           infoString += formatMsg(
             "treeshaked with webpack in production mode",
-            webpackSize
+            webpackSize.code
           );
         }
 

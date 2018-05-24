@@ -8,7 +8,11 @@ const inputName = "__size_snapshot_input__.js";
 const bundleName = "__size_snapshot_bundle__.js";
 const outputName = "__size_snapshot_output__.js";
 
-export const treeshakeWithWebpack = (code: string): Promise<string> => {
+type Output = {
+  code: number
+};
+
+export const treeshakeWithWebpack = (code: string): Promise<Output> => {
   const inputFS = new MemoryFileSystem();
   const outputFS = new MemoryFileSystem();
 
@@ -44,7 +48,9 @@ export const treeshakeWithWebpack = (code: string): Promise<string> => {
       if (err) {
         reject(err);
       } else {
-        resolve(outputFS.readFileSync(`/${outputName}`, "utf8"));
+        resolve({
+          code: outputFS.readFileSync(`/${outputName}`, "utf8").length
+        });
       }
     });
   });
