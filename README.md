@@ -3,15 +3,15 @@
 [travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
 [travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
 
-This provides the information about
+This plugin provides details about
 
-* actual bundle size which will consume user bundler
-* minified bundle size which will parse browsers in production
-* gzipped size which will be loaded in production
+* actual bundle size
+* minified bundle size
+* gzipped bundle size
 
-All these sizes are improtant criteria to choose the library and user will see these criteria in `.size-snapshot.json` file.
+All of these sizes are important criteria when choosing a library, and they will be stored in the `.size-snapshot.json` file.
 
-Also there is a nice feature for `es` output format which provides sizes of treeshaked bundle with both rollup and webpack, so if your library have more than one independant parts you can track that user will not consume dead code.
+There is also a nice feature for the `es` output format which provides sizes of treeshaked bundles with both rollup and webpack, so if your library has more than one independent parts, you can track that users will not consume dead code.
 
 ## Usage
 
@@ -28,7 +28,7 @@ export default {
 };
 ```
 
-If you use uglify or terser plugins then make sure they are placed after this one
+If you use uglify or terser plugins, then make sure they are placed after this one.
 
 ```js
 import { uglify } from "rollup-plugin-uglify";
@@ -45,14 +45,14 @@ export default {
 
 ### snapshotPath
 
-type: `string`  
+type: `string`
 default: `'.size-snapshot.json'`
 
 ### matchSnapshot
 
-This option allows to check that contributor do not forget to build or to commit `.size-snapshot.json` file. If this is `true` the plugin will match existing snapshot and the new one.
+This option allows you to verify that contributors don't forget to build or commit the `.size-snapshot.json` file. If this is `true`, the plugin will validate the snapshot against an existing one.
 
-type: `boolean`  
+type: `boolean`
 default: `false`
 
 ### threshold
@@ -61,14 +61,14 @@ Possible difference between sizes in actual snapshot and generated one.
 
 Note: Make sense only when `matchSnapshot` is `true`.
 
-type: `number`  
+type: `number`
 default: `0`
 
 ### printInfo
 
-Allows to disable log to terminal.
+Allows you to disable log to terminal.
 
-type: `boolean`  
+type: `boolean`
 default: `true`
 
 # License
