@@ -45,14 +45,14 @@ export default {
 
 ### snapshotPath
 
-type: `string`
+type: `string`  
 default: `'.size-snapshot.json'`
 
 ### matchSnapshot
 
 This option allows you to verify that contributors don't forget to build or commit the `.size-snapshot.json` file. If this is `true`, the plugin will validate the snapshot against an existing one.
 
-type: `boolean`
+type: `boolean`  
 default: `false`
 
 ### threshold
@@ -61,14 +61,14 @@ Possible difference between sizes in actual snapshot and generated one.
 
 Note: Make sense only when `matchSnapshot` is `true`.
 
-type: `number`
+type: `number`  
 default: `0`
 
 ### printInfo
 
 Allows you to disable log to terminal.
 
-type: `boolean`
+type: `boolean`  
 default: `true`
 
 # License
