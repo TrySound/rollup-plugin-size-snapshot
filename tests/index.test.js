@@ -150,7 +150,7 @@ test("print sizes with treeshaked size for 'esm' format", async () => {
   expect(arg).toContain('Computed sizes of "output.js" with "esm" format\n');
   expect(arg).toContain("  treeshaked with rollup and minified: 0 B\n");
   expect(arg).toContain(
-    "  treeshaked with webpack in production mode: 566 B\n"
+    "  treeshaked with webpack in production mode: 951 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -168,7 +168,7 @@ test("write treeshaked with rollup and webpack sizes for 'esm' format", async ()
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 566 })
+        webpack: expect.objectContaining({ code: 951 })
       }
     })
   });
@@ -186,7 +186,7 @@ test("treeshake pure annotations with rollup and terser or webpack", async () =>
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 566 })
+        webpack: expect.objectContaining({ code: 951 })
       }
     })
   });
@@ -205,7 +205,7 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 14 }),
-        webpack: expect.objectContaining({ code: 613 })
+        webpack: expect.objectContaining({ code: 998 })
       }
     })
   });
@@ -223,7 +223,7 @@ test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async ()
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 566 })
+        webpack: expect.objectContaining({ code: 951 })
       }
     })
   });
@@ -240,7 +240,7 @@ test("webpack does not provide node shims", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        webpack: { code: 702 }
+        webpack: { code: 1087 }
       })
     })
   });
