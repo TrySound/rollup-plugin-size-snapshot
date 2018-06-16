@@ -47,6 +47,9 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
     compiler.run((err, stats) => {
       if (err) {
         reject(err);
+      } else if (stats.compilation.errors.length !== 0) {
+        const messages = stats.compilation.errors.map(error => String(error));
+        reject(Error(messages.join("\n")));
       } else {
         resolve({
           code: outputFS.readFileSync(`/${outputName}`, "utf8").length

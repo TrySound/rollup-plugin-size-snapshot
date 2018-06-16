@@ -329,3 +329,22 @@ test("match snapshot with threshold", async () => {
 
   errorFn.mockRestore();
 });
+
+test("throw if webpack has compilation errors", async () => {
+  const snapshotPath = "fixtures/failed-webpack.size-snapshot.json";
+  const errorFn = jest.spyOn(console, "error").mockImplementation(() => {});
+
+  try {
+    await runRollup({
+      input: "./fixtures/failed-webpack.js",
+      output: { file: "output.js", format: "esm" },
+      plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    });
+
+    expect(true).toBe(false);
+  } catch (error) {
+    expect(error.message).toContain("Can't resolve './missing.js'");
+  }
+
+  errorFn.mockRestore();
+});
