@@ -74,3 +74,8 @@ default: `true`
 # License
 
 MIT &copy; [Bogdan Chadkin](mailto:trysound@yandex.ru)
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/badge.svg?style=beer-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot)  [![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/make-wish.svg?style=flat-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot?focus=wish)
