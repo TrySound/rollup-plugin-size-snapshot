@@ -3,7 +3,7 @@
 [travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
 [travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
 
-<img src="example1.png" />
+<img src="example2.png" />
 
 This plugin provides details about
 
