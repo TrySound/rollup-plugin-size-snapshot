@@ -3,6 +3,8 @@
 [travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
 [travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
 
+<img src="example.png" />
+
 This plugin provides details about
 
 * actual bundle size (bundler parsing size)
@@ -76,6 +78,7 @@ default: `true`
 MIT &copy; [Bogdan Chadkin](mailto:trysound@yandex.ru)
 
 ## Support on Beerpay
+
 Hey dude! Help me out for a couple of :beers:!
 
-[![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/badge.svg?style=beer-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot)  [![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/make-wish.svg?style=flat-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot?focus=wish)
+[![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/badge.svg?style=beer-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot) [![Beerpay](https://beerpay.io/TrySound/rollup-plugin-size-snapshot/make-wish.svg?style=flat-square)](https://beerpay.io/TrySound/rollup-plugin-size-snapshot?focus=wish)
