@@ -90,18 +90,18 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           gzipped: gzippedSize
         };
 
+        const prettyFormat = format === "es" ? "esm" : format;
+        const prettyBundled = formatSize(sizes.bundled);
+        const prettyMinified = formatSize(sizes.minified);
+        const prettyGzipped = formatSize(sizes.gzipped);
         let infoString =
           "\n" +
-          `Computed sizes of "${output}" with "${
-            format === "es" ? "esm" : format
-          }" format\n` +
-          `  bundled: ${formatSize(sizes.bundled)}\n` +
-          `  minified with terser: ${formatSize(sizes.minified)}\n` +
-          `  minified and gzipped: ${formatSize(sizes.gzipped)}\n`;
+          `Computed sizes of "${output}" with "${prettyFormat}" format\n` +
+          `  bundler parsing size: ${prettyBundled}\n` +
+          `  browser parsing size (minified with terser): ${prettyMinified}\n` +
+          `  download size (minified and gzipped): ${prettyGzipped}\n`;
 
-        const formatMsg = (msg, size) => {
-          return `  ${msg}: ${formatSize(size)}\n`;
-        };
+        const formatMsg = (msg, size) => `  ${msg}: ${formatSize(size)}\n`;
 
         if (shouldTreeshake) {
           sizes.treeshaked = {
@@ -110,11 +110,11 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           };
 
           infoString += formatMsg(
-            "treeshaked with rollup and minified",
+            "treeshaked with rollup with production NODE_ENV and minified",
             rollupSize.code
           );
           infoString += formatMsg(
-            "  import statements size",
+            "  import statements size of it",
             rollupSize.import_statements
           );
           infoString += formatMsg(

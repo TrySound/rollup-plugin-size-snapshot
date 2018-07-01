@@ -13,7 +13,19 @@ This plugin provides details about
 
 All of these sizes are important criteria when choosing a library, and they will be stored in the `.size-snapshot.json` file.
 
-There is also a nice feature for the `es` output format which provides sizes of treeshaked bundles with both rollup and webpack, so if your library has more than one independent parts, you can track that users will not consume dead code.
+There is also a nice feature for the `es` output format which provides sizes of treeshaked bundles with both rollup and webpack, so if your library has more than one independent parts, you can track that users will not consume dead code. Such bundles entry point looks like this
+
+```js
+// nothing is imported here so nothing should go in user bundle
+import {} from "library";
+```
+
+## Why bundle with rollup
+
+* internals are hidden so you shouldn't worry that user reuses your frequently updated modules
+* faster user bundling if library has a lot of modules
+* predictable and more efficient scope hoisting with rollup and as a result more predictable size
+* easier to work without sourcemaps with vendors since development bundlers add a lot of unreadable stuff in module definition
 
 ## Usage
 

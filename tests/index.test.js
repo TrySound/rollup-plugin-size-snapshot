@@ -71,9 +71,9 @@ test("print sizes", async () => {
 
   expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
     'Computed sizes of "output.js" with "cjs" format\n' +
-      "  bundled: 11,160 B\n" +
-      "  minified with terser: 5,464 B\n" +
-      "  minified and gzipped: 2,091 B\n"
+      "  bundler parsing size: 11,160 B\n" +
+      "  browser parsing size (minified with terser): 5,464 B\n" +
+      "  download size (minified and gzipped): 2,091 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -148,7 +148,9 @@ test("print sizes with treeshaked size for 'esm' format", async () => {
 
   const arg = stripAnsi(lastCallArg(consoleInfo));
   expect(arg).toContain('Computed sizes of "output.js" with "esm" format\n');
-  expect(arg).toContain("  treeshaked with rollup and minified: 0 B\n");
+  expect(arg).toContain(
+    "  treeshaked with rollup with production NODE_ENV and minified: 0 B\n"
+  );
   expect(arg).toContain(
     "  treeshaked with webpack in production mode: 951 B\n"
   );
@@ -266,8 +268,8 @@ test("rollup treeshaker shows imports size", async () => {
   // $FlowFixMe
   expect(infoFn).toBeCalledTimes(1);
   expect(stripAnsi(lastCallArg(infoFn))).toContain(
-    "  treeshaked with rollup and minified: 338 B\n" +
-      "    import statements size: 338 B\n"
+    "  treeshaked with rollup with production NODE_ENV and minified: 338 B\n" +
+      "    import statements size of it: 338 B\n"
   );
 });
 
