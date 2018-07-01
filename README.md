@@ -24,7 +24,7 @@ import {} from "library";
 
 * internals are hidden so you shouldn't worry that user reuses your frequently updated modules
 * faster user bundling if library has a lot of modules
-* predictable and more efficient scope hoisting with rollup and as a result more predictable size
+* predictable and more efficient scope hoisting and as a result more predictable size
 * easier to work without sourcemaps with vendors since development bundlers add a lot of unreadable stuff in module definition
 
 ## Usage
