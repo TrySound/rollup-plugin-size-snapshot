@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-size-snapshot",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
