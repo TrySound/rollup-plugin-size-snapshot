@@ -43,7 +43,7 @@ const compareWithThreshold = (_1, _2, threshold) => {
     const value2 = _2[key];
 
     if (isNumber(value1) && isNumber(value2)) {
-      return Math.abs(value1 - value2) < threshold;
+      return Math.abs(value1 - value2) <= threshold;
     }
 
     if (isObject(value1) && isObject(value2)) {

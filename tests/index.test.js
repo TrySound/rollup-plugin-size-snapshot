@@ -135,6 +135,15 @@ test("match bundled, minified or gziped sizes", async () => {
   consoleError.mockRestore();
 });
 
+test("pass matched sizes", async () => {
+  const snapshotPath = "fixtures/matched.size-snapshot.json";
+  await runRollup({
+    input: "./fixtures/redux.js",
+    output: { file: "output.js", format: "esm" },
+    plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })]
+  });
+});
+
 test("print sizes with treeshaked size for 'esm' format", async () => {
   const consoleInfo = jest.spyOn(console, "info").mockImplementation(() => {});
   const snapshotPath = "fixtures/print-with-treeshaking.size-snapshot.json";
