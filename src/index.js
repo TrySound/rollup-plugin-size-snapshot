@@ -23,7 +23,11 @@ type OutputOptions = {
 
 type Plugin = {
   name: string,
-  transformBundle: (source: string, OutputOptions) => null | Promise<null>
+  renderChunk: (
+    code: string,
+    chunk: mixed,
+    options: OutputOptions
+  ) => null | Promise<null>
 };
 
 const validateOptions = options => {
@@ -65,10 +69,10 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
   return {
     name: "size-snapshot",
 
-    transformBundle(source, outputOptions) {
+    renderChunk(source, chunk, outputOptions) {
       const format = outputOptions.format;
       const output = outputOptions.file;
-      const shouldTreeshake = format === "es";
+      const shouldTreeshake = format === "es" || format === "esm";
 
       if (typeof output !== "string") {
         throw Error("output file in rollup options should be specified");
