@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-size-snapshot",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "main": "dist/index.js",
   "files": [
     "dist"
