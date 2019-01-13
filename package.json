@@ -8,8 +8,12 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "jest",
-    "precommit": "lint-staged",
     "prepublish": "yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.{js,md}": [
@@ -37,34 +41,34 @@
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.1",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "@babel/preset-flow": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
-    "flow-bin": "^0.81.0",
-    "husky": "^0.14.3",
+    "flow-bin": "^0.89.0",
+    "husky": "^1.3.1",
     "jest": "^23.6.0",
-    "lint-staged": "^7.2.2",
-    "prettier": "^1.14.2",
-    "redux": "^4.0.0",
-    "rollup": "^0.65.2",
-    "rollup-plugin-terser": "^2.0.2",
-    "strip-ansi": "^4.0.0"
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "redux": "^4.0.1",
+    "rollup": "^1.1.0",
+    "rollup-plugin-terser": "^4.0.2",
+    "strip-ansi": "^5.0.0"
   },
   "peerDependencies": {
-    "rollup": ">=0.65.0 <1"
+    "rollup": "^1.0.0"
   },
   "dependencies": {
-    "acorn": "^6.0.1",
+    "acorn": "^6.0.5",
     "bytes": "^3.0.0",
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "gzip-size": "^5.0.0",
     "jest-diff": "^23.6.0",
     "memory-fs": "^0.4.1",
-    "rollup-plugin-replace": "^2.0.0",
-    "terser": "^3.8.2",
-    "webpack": "^4.19.0"
+    "rollup-plugin-replace": "^2.1.0",
+    "terser": "^3.14.1",
+    "webpack": "^4.28.4"
   }
 }
