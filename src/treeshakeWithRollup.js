@@ -48,19 +48,25 @@ export const treeshakeWithRollup = (code: string): Promise<Output> => {
 
   return rollup(config)
     .then(bundle => bundle.generate({ format: "es" }))
-    .then(result => minify(result.code, { toplevel: true }))
-    .then((result): Output => {
-      const ast = parse(result.code, { sourceType: "module" });
-      const import_statements = ast.body
-        // collect all toplevel import statements
-        .filter(node => node.type === "ImportDeclaration")
-        // endpos is the next character after node -> substract 1
-        .map(node => node.end - node.start)
-        .reduce((acc, size) => acc + size, 0);
+    .then(({ output }) =>
+      minify(output.find(chunkOrAsset => chunkOrAsset.code).code, {
+        toplevel: true
+      })
+    )
+    .then(
+      (result): Output => {
+        const ast = parse(result.code, { sourceType: "module" });
+        const import_statements = ast.body
+          // collect all toplevel import statements
+          .filter(node => node.type === "ImportDeclaration")
+          // endpos is the next character after node -> substract 1
+          .map(node => node.end - node.start)
+          .reduce((acc, size) => acc + size, 0);
 
-      return {
-        code: result.code.length,
-        import_statements
-      };
-    });
+        return {
+          code: result.code.length,
+          import_statements
+        };
+      }
+    );
 };

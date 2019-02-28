@@ -1,12 +1,19 @@
 {
   "name": "rollup-plugin-size-snapshot",
-  "version": "0.6.1",
+  "version": "0.8.0",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "jest",
-    "precommit": "lint-staged",
     "prepublish": "yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.{js,md}": [
@@ -34,31 +41,34 @@
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.48",
-    "@babel/core": "^7.0.0-beta.48",
-    "@babel/preset-env": "^7.0.0-beta.48",
-    "@babel/preset-flow": "^7.0.0-beta.48",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-flow": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.0.0",
-    "flow-bin": "^0.68.0",
-    "husky": "^0.14.3",
-    "jest": "^23.0.0",
-    "lint-staged": "^7.0.0",
-    "prettier": "^1.11.1",
-    "redux": "^3.7.2",
-    "rollup": "^0.62.0",
-    "rollup-plugin-terser": "^1.0.1",
-    "strip-ansi": "^4.0.0"
+    "babel-jest": "^23.6.0",
+    "flow-bin": "^0.89.0",
+    "husky": "^1.3.1",
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "redux": "^4.0.1",
+    "rollup": "^1.1.0",
+    "rollup-plugin-terser": "^4.0.2",
+    "strip-ansi": "^5.0.0"
+  },
+  "peerDependencies": {
+    "rollup": "^1.0.0"
   },
   "dependencies": {
-    "acorn": "^5.7.1",
+    "acorn": "^6.0.5",
     "bytes": "^3.0.0",
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "gzip-size": "^5.0.0",
-    "jest-diff": "^23.2.0",
+    "jest-diff": "^23.6.0",
     "memory-fs": "^0.4.1",
-    "rollup-plugin-replace": "^2.0.0",
-    "terser": "^3.7.8",
-    "webpack": "^4.16.0"
+    "rollup-plugin-replace": "^2.1.0",
+    "terser": "^3.14.1",
+    "webpack": "^4.28.4"
   }
 }
