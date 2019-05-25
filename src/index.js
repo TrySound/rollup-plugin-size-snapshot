@@ -1,6 +1,6 @@
 // @flow
 
-import { join } from "path";
+import { relative, dirname, join } from "path";
 import { minify } from "terser";
 import gzipSize from "gzip-size";
 import bytes from "bytes";
@@ -77,6 +77,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
       if (typeof output !== "string") {
         throw Error("output file in rollup options should be specified");
       }
+      const outputName = relative(dirname(snapshotPath), output);
 
       const minified = minify(source).code;
       const treeshakeSize = code =>
@@ -100,7 +101,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         const prettyGzipped = formatSize(sizes.gzipped);
         let infoString =
           "\n" +
-          `Computed sizes of "${output}" with "${prettyFormat}" format\n` +
+          `Computed sizes of "${outputName}" with "${prettyFormat}" format\n` +
           `  bundler parsing size: ${prettyBundled}\n` +
           `  browser parsing size (minified with terser): ${prettyMinified}\n` +
           `  download size (minified and gzipped): ${prettyGzipped}\n`;
@@ -129,7 +130,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
         const snapshotParams = {
           snapshotPath,
-          name: output,
+          name: outputName,
           data: sizes,
           threshold
         };
