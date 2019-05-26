@@ -4,6 +4,7 @@ import * as path from "path";
 import { readFileSync, unlinkSync } from "fs";
 import { rollup } from "rollup";
 import { terser } from "rollup-plugin-terser";
+import nodeResolve from "rollup-plugin-node-resolve";
 import { sizeSnapshot } from "../src";
 import stripAnsi from "strip-ansi";
 
@@ -54,7 +55,7 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
     }
   });
 });
@@ -74,7 +75,7 @@ test("print sizes", async () => {
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
       "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,091 B\n"
+      "  download size (minified and gzipped): 2,090 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -92,7 +93,7 @@ test("not affected by following terser plugin", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
     }
   });
 });
@@ -271,15 +272,15 @@ test("rollup treeshaker shows imports size", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        rollup: { code: 338, import_statements: 338 }
+        rollup: { code: 303, import_statements: 303 }
       })
     })
   });
   // $FlowFixMe
   expect(infoFn).toBeCalledTimes(1);
   expect(stripAnsi(lastCallArg(infoFn))).toContain(
-    "  treeshaked with rollup with production NODE_ENV and minified: 338 B\n" +
-      "    import statements size of it: 338 B\n"
+    "  treeshaked with rollup with production NODE_ENV and minified: 303 B\n" +
+      "    import statements size of it: 303 B\n"
   );
 });
 
@@ -375,7 +376,7 @@ test("write relative path when output is absolute", async () => {
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
       "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,091 B\n"
+      "  download size (minified and gzipped): 2,090 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -384,7 +385,30 @@ test("write relative path when output is absolute", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
+    }
+  });
+});
+
+test("node_modules should not be resolved on windows for esm", async () => {
+  const snapshotPath = "fixtures/core-js.size-snapshot.json";
+  await runRollup({
+    input: "./fixtures/core-js.js",
+    plugins: [nodeResolve(), sizeSnapshot({ snapshotPath, printInfo: false })],
+    external: ["core-js/es/array/fill.js"],
+    output: { file: path.resolve("fixtures/output.js"), format: "esm" }
+  });
+  const snapshot = pullSnapshot(snapshotPath);
+
+  expect(snapshot).toMatchObject({
+    "output.js": {
+      bundled: 65,
+      minified: 62,
+      gzipped: 77,
+      treeshaked: {
+        rollup: expect.objectContaining({ code: 56 }),
+        webpack: expect.objectContaining({ code: 1050 })
+      }
     }
   });
 });
