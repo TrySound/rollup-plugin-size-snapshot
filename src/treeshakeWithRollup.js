@@ -4,7 +4,6 @@ import { rollup } from "rollup";
 import { minify } from "terser";
 import { parse } from "acorn";
 import replace from "rollup-plugin-replace";
-import { isExternal } from "./utils.js";
 
 type Output = {
   code: number,
@@ -39,7 +38,7 @@ export const treeshakeWithRollup = (code: string): Promise<Output> => {
   const config = {
     input: `/${inputName}`,
     onwarn() {},
-    external: isExternal,
+    external: id => isReservedId(id) === false,
     plugins: [
       resolvePlugin({ code }),
       replace({ "process.env.NODE_ENV": JSON.stringify("production") })

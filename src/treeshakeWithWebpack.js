@@ -2,11 +2,12 @@
 
 import webpack from "webpack";
 import MemoryFileSystem from "memory-fs";
-import { isExternal } from "./utils.js";
 
 const inputName = "__size_snapshot_input__.js";
 const bundleName = "__size_snapshot_bundle__.js";
 const outputName = "__size_snapshot_output__.js";
+
+const isReservedId = id => id.includes(inputName) || id.includes(bundleName);
 
 type Output = {
   code: number
@@ -25,20 +26,13 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
     mode: "production",
     // disable all node shims
     // https://webpack.js.org/configuration/node/
-    node: {
-      global: false,
-      process: false,
-      __filename: false,
-      __dirname: false,
-      Buffer: false,
-      setImmediate: false
-    },
+    node: false,
     externals: [
       (context, request, callback) => {
-        if (isExternal(request)) {
-          callback(null, "commonjs " + request);
-        } else {
+        if (isReservedId(request)) {
           callback();
+        } else {
+          callback(null, "commonjs " + request);
         }
       }
     ]

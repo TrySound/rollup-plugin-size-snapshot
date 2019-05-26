@@ -54,7 +54,7 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
     }
   });
 });
@@ -74,7 +74,7 @@ test("print sizes", async () => {
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
       "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,091 B\n"
+      "  download size (minified and gzipped): 2,090 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -92,7 +92,7 @@ test("not affected by following terser plugin", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
     }
   });
 });
@@ -271,15 +271,15 @@ test("rollup treeshaker shows imports size", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        rollup: { code: 338, import_statements: 338 }
+        rollup: { code: 303, import_statements: 303 }
       })
     })
   });
   // $FlowFixMe
   expect(infoFn).toBeCalledTimes(1);
   expect(stripAnsi(lastCallArg(infoFn))).toContain(
-    "  treeshaked with rollup with production NODE_ENV and minified: 338 B\n" +
-      "    import statements size of it: 338 B\n"
+    "  treeshaked with rollup with production NODE_ENV and minified: 303 B\n" +
+      "    import statements size of it: 303 B\n"
   );
 });
 
@@ -342,25 +342,6 @@ test("match snapshot with threshold", async () => {
   errorFn.mockRestore();
 });
 
-test("throw if webpack has compilation errors", async () => {
-  const snapshotPath = "fixtures/failed-webpack.size-snapshot.json";
-  const errorFn = jest.spyOn(console, "error").mockImplementation(() => {});
-
-  try {
-    await runRollup({
-      input: "./fixtures/failed-webpack.js",
-      output: { file: "fixtures/output.js", format: "esm" },
-      plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
-    });
-
-    expect(true).toBe(false);
-  } catch (error) {
-    expect(error.message).toContain("Can't resolve './missing.js'");
-  }
-
-  errorFn.mockRestore();
-});
-
 test("write relative path when output is absolute", async () => {
   const consoleInfo = jest.spyOn(console, "info").mockImplementation(() => {});
   const snapshotPath = "fixtures/relative.size-snapshot.json";
@@ -375,7 +356,7 @@ test("write relative path when output is absolute", async () => {
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
       "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,091 B\n"
+      "  download size (minified and gzipped): 2,090 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -384,7 +365,29 @@ test("write relative path when output is absolute", async () => {
     "output.js": {
       bundled: 11160,
       minified: 5464,
-      gzipped: 2091
+      gzipped: 2090
+    }
+  });
+});
+
+test("handle umd with esm", async () => {
+  const snapshotPath = "fixtures/umd.size-snapshot.json";
+  await runRollup({
+    input: "./fixtures/umd.js",
+    plugins: [sizeSnapshot({ snapshotPath })],
+    output: { file: path.resolve("fixtures/output.js"), format: "esm" }
+  });
+  const snapshot = pullSnapshot(snapshotPath);
+
+  expect(snapshot).toMatchObject({
+    "output.js": {
+      bundled: 330,
+      minified: 206,
+      gzipped: 139,
+      treeshaked: {
+        rollup: { code: 162 },
+        webpack: { code: 1260 }
+      }
     }
   });
 });
