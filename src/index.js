@@ -69,7 +69,9 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
   return {
     name: "size-snapshot",
 
-    renderChunk(source, chunk, outputOptions) {
+    renderChunk(rawSource, chunk, outputOptions) {
+      // remove windows specific newline character
+      const source = rawSource.replace(/\r/g, "");
       const format = outputOptions.format;
       const output = outputOptions.file;
       const shouldTreeshake = format === "es" || format === "esm";
