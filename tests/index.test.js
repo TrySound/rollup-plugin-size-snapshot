@@ -390,24 +390,23 @@ test("write relative path when output is absolute", async () => {
   });
 });
 
-test("node_modules should not be resolved on windows for esm", async () => {
-  const snapshotPath = "fixtures/core-js.size-snapshot.json";
+test("commonjs should not be resolved on windows for esm", async () => {
+  const snapshotPath = "fixtures/commonjs.size-snapshot.json";
   await runRollup({
-    input: "./fixtures/core-js.js",
+    input: "./fixtures/commonjs.js",
     plugins: [nodeResolve(), sizeSnapshot({ snapshotPath, printInfo: false })],
-    external: ["core-js/es/array/fill.js"],
     output: { file: path.resolve("fixtures/output.js"), format: "esm" }
   });
   const snapshot = pullSnapshot(snapshotPath);
 
   expect(snapshot).toMatchObject({
     "output.js": {
-      bundled: 65,
-      minified: 62,
-      gzipped: 77,
+      bundled: 70,
+      minified: 66,
+      gzipped: 80,
       treeshaked: {
-        rollup: expect.objectContaining({ code: 56 }),
-        webpack: expect.objectContaining({ code: 1050 })
+        rollup: expect.objectContaining({ code: 60 }),
+        webpack: expect.objectContaining({ code: 1063 })
       }
     }
   });
