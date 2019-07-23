@@ -386,7 +386,7 @@ test("handle umd with esm", async () => {
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1246 }
+        webpack: { code: 1263 }
       }
     }
   });
