@@ -64,7 +64,7 @@ default: `'.size-snapshot.json'`
 
 ### matchSnapshot
 
-This option allows you to verify that contributors don't forget to build or commit the `.size-snapshot.json` file. If this is `true`, the plugin will validate the snapshot against an existing one.
+This option allows you to verify that contributors don't forget to build or commit the `.size-snapshot.json` file. If this is `true`, the plugin will validate the snapshot against an existing one. Typically, one would define this option's value as true during continuous integration; [using it locally is unintended](https://github.com/TrySound/rollup-plugin-size-snapshot/issues/33).
 
 type: `boolean`  
 default: `false`
