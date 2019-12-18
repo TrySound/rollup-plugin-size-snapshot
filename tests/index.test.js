@@ -53,8 +53,8 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
   expect(snapshot).toMatchObject({
     "output.js": {
       bundled: 11160,
-      minified: 5464,
-      gzipped: 2090
+      minified: 5474,
+      gzipped: 2093
     }
   });
 });
@@ -73,8 +73,8 @@ test("print sizes", async () => {
   expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
-      "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,090 B\n"
+      "  browser parsing size (minified with terser): 5,474 B\n" +
+      "  download size (minified and gzipped): 2,093 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -91,8 +91,8 @@ test("not affected by following terser plugin", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": {
       bundled: 11160,
-      minified: 5464,
-      gzipped: 2090
+      minified: 5474,
+      gzipped: 2093
     }
   });
 });
@@ -131,8 +131,8 @@ test("match bundled, minified or gziped sizes", async () => {
   }
   const arg = lastCallArg(consoleError);
   expect(arg).toContain(`+   "bundled": 10971`);
-  expect(arg).toContain(`+   "minified": 5293`);
-  expect(arg).toContain(`+   "gzipped": 2032`);
+  expect(arg).toContain(`+   "minified": 5303`);
+  expect(arg).toContain(`+   "gzipped": 2034`);
   consoleError.mockRestore();
 });
 
@@ -217,7 +217,7 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 14 }),
-        webpack: expect.objectContaining({ code: 998 })
+        webpack: expect.objectContaining({ code: 1016 })
       }
     })
   });
@@ -252,7 +252,7 @@ test("webpack does not provide node shims", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        webpack: { code: 1087 }
+        webpack: { code: 1071 }
       })
     })
   });
@@ -355,8 +355,8 @@ test("write relative path when output is absolute", async () => {
   expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
     'Computed sizes of "output.js" with "cjs" format\n' +
       "  bundler parsing size: 11,160 B\n" +
-      "  browser parsing size (minified with terser): 5,464 B\n" +
-      "  download size (minified and gzipped): 2,090 B\n"
+      "  browser parsing size (minified with terser): 5,474 B\n" +
+      "  download size (minified and gzipped): 2,093 B\n"
   );
 
   consoleInfo.mockRestore();
@@ -364,8 +364,8 @@ test("write relative path when output is absolute", async () => {
   expect(snapshot).toMatchObject({
     "output.js": {
       bundled: 11160,
-      minified: 5464,
-      gzipped: 2090
+      minified: 5474,
+      gzipped: 2093
     }
   });
 });
@@ -386,7 +386,7 @@ test("handle umd with esm", async () => {
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1263 }
+        webpack: { code: 1264 }
       }
     }
   });

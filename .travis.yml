@@ -4,10 +4,9 @@ os:
   - osx
 language: node_js
 node_js:
-  - "node"
-  - "10"
-  - "8"
-  - "6"
+  - 10
+  - 12
+  - node
 cache: yarn
 before_install:
   yarn config set ignore-engines true

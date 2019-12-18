@@ -1,8 +1,8 @@
 {
   "output.js": {
     "bundled": 10971,
-    "gzipped": 2032,
-    "minified": 5293,
+    "gzipped": 2034,
+    "minified": 5303,
     "treeshaked": {
       "rollup": {
         "code": 0,
