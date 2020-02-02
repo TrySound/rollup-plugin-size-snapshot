@@ -1,9 +1,9 @@
 // @flow
 
+import replace from "@rollup/plugin-replace";
 import { rollup } from "rollup";
 import { minify } from "terser";
 import { parse } from "acorn";
-import replace from "rollup-plugin-replace";
 
 type Output = {
   code: number,
@@ -52,20 +52,18 @@ export const treeshakeWithRollup = (code: string): Promise<Output> => {
         toplevel: true
       })
     )
-    .then(
-      (result): Output => {
-        const ast = parse(result.code, { sourceType: "module" });
-        const import_statements = ast.body
-          // collect all toplevel import statements
-          .filter(node => node.type === "ImportDeclaration")
-          // endpos is the next character after node -> substract 1
-          .map(node => node.end - node.start)
-          .reduce((acc, size) => acc + size, 0);
+    .then((result): Output => {
+      const ast = parse(result.code, { sourceType: "module" });
+      const import_statements = ast.body
+        // collect all toplevel import statements
+        .filter(node => node.type === "ImportDeclaration")
+        // endpos is the next character after node -> substract 1
+        .map(node => node.end - node.start)
+        .reduce((acc, size) => acc + size, 0);
 
-        return {
-          code: result.code.length,
-          import_statements
-        };
-      }
-    );
+      return {
+        code: result.code.length,
+        import_statements
+      };
+    });
 };
