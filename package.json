@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@rollup/plugin-replace": "^2.3.1",
-    "acorn": "^7.1.0",
+    "acorn": "^7.1.1",
     "bytes": "^3.1.0",
     "chalk": "^3.0.0",
     "gzip-size": "^5.1.1",
