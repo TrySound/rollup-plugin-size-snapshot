@@ -10,7 +10,7 @@ import _objectWithoutProperties from "@babel/runtime/helpers/builtin/es6/objectW
 
 var State =
   /*#__PURE__*/
-  (function(_Component) {
+  (function (_Component) {
     function State() {}
 
     _objectSpread(State);

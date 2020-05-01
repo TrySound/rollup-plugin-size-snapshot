@@ -13,12 +13,12 @@ type Options = {
   snapshotPath?: string,
   matchSnapshot?: boolean,
   threshold?: number,
-  printInfo?: boolean
+  printInfo?: boolean,
 };
 
 type OutputOptions = {
   format: string,
-  file: string
+  file: string,
 };
 
 type Plugin = {
@@ -27,22 +27,22 @@ type Plugin = {
     code: string,
     chunk: mixed,
     options: OutputOptions
-  ) => null | Promise<null>
+  ) => null | Promise<null>,
 };
 
-const validateOptions = options => {
+const validateOptions = (options) => {
   const optionsKeys: $ReadOnlyArray<$Keys<Options>> = [
     "snapshotPath",
     "matchSnapshot",
     "threshold",
-    "printInfo"
+    "printInfo",
   ];
 
   const invalidKeys = Object.keys(options).filter(
-    d => !optionsKeys.includes(d)
+    (d) => !optionsKeys.includes(d)
   );
 
-  const wrap = d => `"${d}"`;
+  const wrap = (d) => `"${d}"`;
 
   if (1 === invalidKeys.length) {
     throw Error(`Option ${wrap(invalidKeys[0])} is invalid`);
@@ -55,7 +55,7 @@ const validateOptions = options => {
 
 const bytesConfig = { thousandsSeparator: ",", unitSeparator: " ", unit: "B" };
 
-const formatSize = d => chalk.bold(bytes.format(d, bytesConfig));
+const formatSize = (d) => chalk.bold(bytes.format(d, bytesConfig));
 
 export const sizeSnapshot = (options?: Options = {}): Plugin => {
   validateOptions(options);
@@ -82,19 +82,19 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
       const outputName = relative(dirname(snapshotPath), output);
 
       const minified = minify(source).code;
-      const treeshakeSize = code =>
+      const treeshakeSize = (code) =>
         Promise.all([treeshakeWithRollup(code), treeshakeWithWebpack(code)]);
 
       return Promise.all([
         gzipSize(minified),
         shouldTreeshake
           ? treeshakeSize(source)
-          : [{ code: 0, import_statements: 0 }, { code: 0 }]
+          : [{ code: 0, import_statements: 0 }, { code: 0 }],
       ]).then(([gzippedSize, [rollupSize, webpackSize]]) => {
         const sizes: Object = {
           bundled: source.length,
           minified: minified.length,
-          gzipped: gzippedSize
+          gzipped: gzippedSize,
         };
 
         const prettyFormat = format === "es" ? "esm" : format;
@@ -113,7 +113,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
         if (shouldTreeshake) {
           sizes.treeshaked = {
             rollup: rollupSize,
-            webpack: webpackSize
+            webpack: webpackSize,
           };
 
           infoString += formatMsg(
@@ -134,7 +134,7 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
           snapshotPath,
           name: outputName,
           data: sizes,
-          threshold
+          threshold,
         };
         if (shouldMatchSnapshot) {
           snapshot.match(snapshotParams);
@@ -147,6 +147,6 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
 
         return null;
       });
-    }
+    },
   };
 };

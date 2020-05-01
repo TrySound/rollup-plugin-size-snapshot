@@ -9,8 +9,7 @@ node_js:
   - 14
   - node
 cache: yarn
-before_install:
-  yarn config set ignore-engines true
+before_install: yarn config set ignore-engines true
 # fix running yarn installation on windows
 env:
   - YARN_GPG=no
