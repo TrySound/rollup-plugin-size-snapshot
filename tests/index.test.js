@@ -97,21 +97,6 @@ test("not affected by following terser plugin", async () => {
   });
 });
 
-test("fail if output.file is not specified", async () => {
-  try {
-    await runRollup({
-      input: "./fixtures/redux.js",
-      output: { file: undefined, format: "esm" },
-      plugins: [sizeSnapshot()]
-    });
-    expect(true).toBe(false);
-  } catch (error) {
-    expect(error.message).toContain(
-      "output file in rollup options should be specified"
-    );
-  }
-});
-
 test("match bundled, minified or gziped sizes", async () => {
   const consoleError = jest
     .spyOn(console, "error")
@@ -386,7 +371,7 @@ test("handle umd with esm", async () => {
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1264 }
+        webpack: { code: 1244 }
       }
     }
   });
