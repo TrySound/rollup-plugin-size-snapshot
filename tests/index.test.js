@@ -59,6 +59,29 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
   });
 });
 
+test("works with output.dir option", async () => {
+  const snapshotPath = "fixtures/basic.size-snapshot.json";
+  await runRollup({
+    input: ["./fixtures/redux.js", "./fixtures/pure-annotated.js"],
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
+    output: { dir: "fixtures/output", format: "cjs" },
+  });
+  const snapshot = pullSnapshot(snapshotPath);
+
+  expect(snapshot).toMatchObject({
+    "pure-annotated.js": {
+      bundled: 1459,
+      gzipped: 476,
+      minified: 912,
+    },
+    "redux.js": {
+      bundled: 11138,
+      minified: 5474,
+      gzipped: 2093,
+    },
+  });
+});
+
 test("print sizes", async () => {
   const consoleInfo = jest.spyOn(console, "info").mockImplementation(() => {});
   const snapshotPath = "fixtures/print.size-snapshot.json";
@@ -95,21 +118,6 @@ test("not affected by following terser plugin", async () => {
       gzipped: 2093,
     },
   });
-});
-
-test("fail if output.file is not specified", async () => {
-  try {
-    await runRollup({
-      input: "./fixtures/redux.js",
-      output: { file: undefined, format: "esm" },
-      plugins: [sizeSnapshot()],
-    });
-    expect(true).toBe(false);
-  } catch (error) {
-    expect(error.message).toContain(
-      "output file in rollup options should be specified"
-    );
-  }
 });
 
 test("match bundled, minified or gziped sizes", async () => {

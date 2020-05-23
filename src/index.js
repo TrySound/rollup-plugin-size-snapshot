@@ -25,7 +25,7 @@ type Plugin = {
   name: string,
   renderChunk: (
     code: string,
-    chunk: mixed,
+    chunk: any,
     options: OutputOptions
   ) => null | Promise<null>,
 };
@@ -73,13 +73,9 @@ export const sizeSnapshot = (options?: Options = {}): Plugin => {
       // remove windows specific newline character
       const source = rawSource.replace(/\r/g, "");
       const format = outputOptions.format;
-      const output = outputOptions.file;
       const shouldTreeshake = format === "es" || format === "esm";
 
-      if (typeof output !== "string") {
-        throw Error("output file in rollup options should be specified");
-      }
-      const outputName = relative(dirname(snapshotPath), output);
+      const outputName = chunk.fileName;
 
       const minified = minify(source).code;
       const treeshakeSize = (code) =>
