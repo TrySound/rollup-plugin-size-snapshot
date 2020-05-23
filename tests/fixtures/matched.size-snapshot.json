@@ -1,6 +1,6 @@
 {
   "output.js": {
-    "bundled": 10971,
+    "bundled": 10949,
     "gzipped": 2034,
     "minified": 5303,
     "treeshaked": {

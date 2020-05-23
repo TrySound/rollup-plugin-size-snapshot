@@ -7,10 +7,10 @@ type Params = {|
   snapshotPath: string,
   name: string,
   data: Object,
-  threshold: number
+  threshold: number,
 |};
 
-const readJsonSync = file => {
+const readJsonSync = (file) => {
   try {
     const text = readFileSync(file, "utf-8");
     try {
@@ -26,9 +26,9 @@ const readJsonSync = file => {
 const writeJsonSync = (file, data) =>
   writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
 
-const isObject = d => typeof d === "object" && d != null;
+const isObject = (d) => typeof d === "object" && d != null;
 
-const isNumber = d => typeof d === "number";
+const isNumber = (d) => typeof d === "number";
 
 const compareWithThreshold = (_1, _2, threshold) => {
   const keys1 = Object.keys(_1);

@@ -7,10 +7,10 @@ const inputName = "__size_snapshot_input__.js";
 const bundleName = "__size_snapshot_bundle__.js";
 const outputName = "__size_snapshot_output__.js";
 
-const isReservedId = id => id.includes(inputName) || id.includes(bundleName);
+const isReservedId = (id) => id.includes(inputName) || id.includes(bundleName);
 
 type Output = {
-  code: number
+  code: number,
 };
 
 export const treeshakeWithWebpack = (code: string): Promise<Output> => {
@@ -21,7 +21,7 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
     entry: `/${inputName}`,
     output: {
       path: "/",
-      filename: outputName
+      filename: outputName,
     },
     mode: "production",
     // disable all node shims
@@ -34,8 +34,8 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
         } else {
           callback(null, "commonjs " + request);
         }
-      }
-    ]
+      },
+    ],
   });
 
   inputFS.writeFileSync(`/${inputName}`, `import {} from '/${bundleName}'`);
@@ -49,11 +49,11 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
       if (err) {
         reject(err);
       } else if (stats.compilation.errors.length !== 0) {
-        const messages = stats.compilation.errors.map(error => String(error));
+        const messages = stats.compilation.errors.map((error) => String(error));
         reject(Error(messages.join("\n")));
       } else {
         resolve({
-          code: outputFS.readFileSync(`/${outputName}`, "utf8").length
+          code: outputFS.readFileSync(`/${outputName}`, "utf8").length,
         });
       }
     });

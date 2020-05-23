@@ -9,17 +9,17 @@ import stripAnsi from "strip-ansi";
 
 process.chdir("tests");
 
-const last = arr => arr[Math.max(0, arr.length - 1)];
+const last = (arr) => arr[Math.max(0, arr.length - 1)];
 
-const lastCallArg = mockFn => last(mockFn.mock.calls)[0];
+const lastCallArg = (mockFn) => last(mockFn.mock.calls)[0];
 
-const runRollup = async options => {
+const runRollup = async (options) => {
   const bundle = await rollup(options);
   const result = await bundle.generate(options.output);
   return result;
 };
 
-const pullSnapshot = snapshotPath => {
+const pullSnapshot = (snapshotPath) => {
   const snapshot = JSON.parse(readFileSync(snapshotPath, "utf-8"));
   unlinkSync(snapshotPath);
   return snapshot;
@@ -30,13 +30,13 @@ test("fail on invalid options", () => {
     sizeSnapshot({
       minify: true,
       snapshot: "",
-      matchSnapshot: false
+      matchSnapshot: false,
     });
   }).toThrowError(/Options "minify", "snapshot" are invalid/);
 
   expect(() => {
     sizeSnapshot({
-      minify: true
+      minify: true,
     });
   }).toThrowError(/Option "minify" is invalid/);
 });
@@ -46,16 +46,16 @@ test("write bundled, minified and gzipped size of es bundle", async () => {
   await runRollup({
     input: "./fixtures/redux.js",
     plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
-    output: { file: "fixtures/output.js", format: "cjs" }
+    output: { file: "fixtures/output.js", format: "cjs" },
   });
   const snapshot = pullSnapshot(snapshotPath);
 
   expect(snapshot).toMatchObject({
     "output.js": {
-      bundled: 11160,
+      bundled: 11138,
       minified: 5474,
-      gzipped: 2093
-    }
+      gzipped: 2093,
+    },
   });
 });
 
@@ -65,14 +65,14 @@ test("print sizes", async () => {
   const snapshot = await runRollup({
     input: "./fixtures/redux.js",
     output: { file: "fixtures/output.js", format: "cjs" },
-    plugins: [sizeSnapshot({ snapshotPath })]
+    plugins: [sizeSnapshot({ snapshotPath })],
   });
 
   pullSnapshot(snapshotPath);
 
   expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
     'Computed sizes of "output.js" with "cjs" format\n' +
-      "  bundler parsing size: 11,160 B\n" +
+      "  bundler parsing size: 11,138 B\n" +
       "  browser parsing size (minified with terser): 5,474 B\n" +
       "  download size (minified and gzipped): 2,093 B\n"
   );
@@ -85,15 +85,15 @@ test("not affected by following terser plugin", async () => {
   await runRollup({
     input: "./fixtures/redux.js",
     output: { file: "fixtures/output.js", format: "cjs" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false }), terser()]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false }), terser()],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": {
-      bundled: 11160,
+      bundled: 11138,
       minified: 5474,
-      gzipped: 2093
-    }
+      gzipped: 2093,
+    },
   });
 });
 
@@ -102,7 +102,7 @@ test("fail if output.file is not specified", async () => {
     await runRollup({
       input: "./fixtures/redux.js",
       output: { file: undefined, format: "esm" },
-      plugins: [sizeSnapshot()]
+      plugins: [sizeSnapshot()],
     });
     expect(true).toBe(false);
   } catch (error) {
@@ -121,7 +121,7 @@ test("match bundled, minified or gziped sizes", async () => {
     await runRollup({
       input: "./fixtures/redux.js",
       output: { file: "fixtures/output.js", format: "esm" },
-      plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })]
+      plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })],
     });
     expect(true).toBe(false);
   } catch (error) {
@@ -130,7 +130,7 @@ test("match bundled, minified or gziped sizes", async () => {
     );
   }
   const arg = lastCallArg(consoleError);
-  expect(arg).toContain(`+   "bundled": 10971`);
+  expect(arg).toContain(`+   "bundled": 10949`);
   expect(arg).toContain(`+   "minified": 5303`);
   expect(arg).toContain(`+   "gzipped": 2034`);
   consoleError.mockRestore();
@@ -141,7 +141,7 @@ test("pass matched sizes", async () => {
   await runRollup({
     input: "./fixtures/redux.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })]
+    plugins: [sizeSnapshot({ snapshotPath, matchSnapshot: true })],
   });
 });
 
@@ -151,7 +151,7 @@ test("print sizes with treeshaked size for 'esm' format", async () => {
   const snapshot = await runRollup({
     input: "./fixtures/redux.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath })]
+    plugins: [sizeSnapshot({ snapshotPath })],
   });
 
   pullSnapshot(snapshotPath);
@@ -173,16 +173,16 @@ test("write treeshaked with rollup and webpack sizes for 'esm' format", async ()
   const snapshot = await runRollup({
     input: "./fixtures/redux.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 })
-      }
-    })
+        webpack: expect.objectContaining({ code: 951 }),
+      },
+    }),
   });
 });
 
@@ -191,16 +191,16 @@ test("treeshake pure annotations with rollup and terser or webpack", async () =>
   await runRollup({
     input: "./fixtures/pure-annotated.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 })
-      }
-    })
+        webpack: expect.objectContaining({ code: 951 }),
+      },
+    }),
   });
 });
 
@@ -210,16 +210,16 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     input: "./fixtures/externals.js",
     external: ["react"],
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 14 }),
-        webpack: expect.objectContaining({ code: 1016 })
-      }
-    })
+        webpack: expect.objectContaining({ code: 1016 }),
+      },
+    }),
   });
 });
 
@@ -228,16 +228,16 @@ test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async ()
   await runRollup({
     input: "./fixtures/node_env.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 })
-      }
-    })
+        webpack: expect.objectContaining({ code: 951 }),
+      },
+    }),
   });
 });
 
@@ -246,15 +246,15 @@ test("webpack does not provide node shims", async () => {
   await runRollup({
     input: "./fixtures/node-shims.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })]
+    plugins: [sizeSnapshot({ snapshotPath, printInfo: false })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        webpack: { code: 1071 }
-      })
-    })
+        webpack: { code: 1071 },
+      }),
+    }),
   });
 });
 
@@ -264,16 +264,16 @@ test("rollup treeshaker shows imports size", async () => {
   await runRollup({
     input: "./fixtures/import-statements-size.js",
     output: { file: "fixtures/output.js", format: "esm" },
-    external: id => !id.startsWith(".") && !id.startsWith("/"),
-    plugins: [sizeSnapshot({ snapshotPath })]
+    external: (id) => !id.startsWith(".") && !id.startsWith("/"),
+    plugins: [sizeSnapshot({ snapshotPath })],
   });
 
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        rollup: { code: 303, import_statements: 303 }
-      })
-    })
+        rollup: { code: 303, import_statements: 303 },
+      }),
+    }),
   });
   // $FlowFixMe
   expect(infoFn).toBeCalledTimes(1);
@@ -291,8 +291,8 @@ test("fail when matching missing snapshot", async () => {
       input: "./fixtures/redux.js",
       output: { file: "fixtures/output.js", format: "esm" },
       plugins: [
-        sizeSnapshot({ snapshotPath, matchSnapshot: true, printInfo: false })
-      ]
+        sizeSnapshot({ snapshotPath, matchSnapshot: true, printInfo: false }),
+      ],
     });
 
     expect(true).toBe(false);
@@ -315,9 +315,9 @@ test("match snapshot with threshold", async () => {
         snapshotPath,
         matchSnapshot: true,
         threshold: 1000,
-        printInfo: false
-      })
-    ]
+        printInfo: false,
+      }),
+    ],
   });
 
   try {
@@ -329,9 +329,9 @@ test("match snapshot with threshold", async () => {
           snapshotPath,
           matchSnapshot: true,
           threshold: 100,
-          printInfo: false
-        })
-      ]
+          printInfo: false,
+        }),
+      ],
     });
 
     expect(true).toBe(false);
@@ -348,13 +348,13 @@ test("write relative path when output is absolute", async () => {
   await runRollup({
     input: "./fixtures/redux.js",
     plugins: [sizeSnapshot({ snapshotPath })],
-    output: { file: path.resolve("fixtures/output.js"), format: "cjs" }
+    output: { file: path.resolve("fixtures/output.js"), format: "cjs" },
   });
   const snapshot = pullSnapshot(snapshotPath);
 
   expect(stripAnsi(lastCallArg(consoleInfo))).toContain(
     'Computed sizes of "output.js" with "cjs" format\n' +
-      "  bundler parsing size: 11,160 B\n" +
+      "  bundler parsing size: 11,138 B\n" +
       "  browser parsing size (minified with terser): 5,474 B\n" +
       "  download size (minified and gzipped): 2,093 B\n"
   );
@@ -363,10 +363,10 @@ test("write relative path when output is absolute", async () => {
 
   expect(snapshot).toMatchObject({
     "output.js": {
-      bundled: 11160,
+      bundled: 11138,
       minified: 5474,
-      gzipped: 2093
-    }
+      gzipped: 2093,
+    },
   });
 });
 
@@ -375,7 +375,7 @@ test("handle umd with esm", async () => {
   await runRollup({
     input: "./fixtures/umd.js",
     plugins: [sizeSnapshot({ snapshotPath })],
-    output: { file: path.resolve("fixtures/output.js"), format: "esm" }
+    output: { file: path.resolve("fixtures/output.js"), format: "esm" },
   });
   const snapshot = pullSnapshot(snapshotPath);
 
@@ -386,8 +386,8 @@ test("handle umd with esm", async () => {
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1264 }
-      }
-    }
+        webpack: { code: 1266 },
+      },
+    },
   });
 });

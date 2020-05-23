@@ -1,5 +1,5 @@
 var ActionTypes = {
-  INIT: "@@redux/INIT"
+  INIT: "@@redux/INIT",
 };
 
 export function createStore(reducer, preloadedState, enhancer) {
@@ -112,7 +112,7 @@ export function createStore(reducer, preloadedState, enhancer) {
     dispatch: dispatch,
     subscribe: subscribe,
     getState: getState,
-    replaceReducer: replaceReducer
+    replaceReducer: replaceReducer,
   };
 }
 
@@ -178,11 +178,11 @@ function getUnexpectedStateShapeWarningMessage(
     );
   }
 
-  var unexpectedKeys = Object.keys(inputState).filter(function(key) {
+  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
     return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
   });
 
-  unexpectedKeys.forEach(function(key) {
+  unexpectedKeys.forEach(function (key) {
     unexpectedKeyCache[key] = true;
   });
 
@@ -203,7 +203,7 @@ function getUnexpectedStateShapeWarningMessage(
 }
 
 function assertReducerShape(reducers) {
-  Object.keys(reducers).forEach(function(key) {
+  Object.keys(reducers).forEach(function (key) {
     var reducer = reducers[key];
     var initialState = reducer(undefined, { type: ActionTypes.INIT });
 
@@ -221,11 +221,7 @@ function assertReducerShape(reducers) {
 
     var type =
       "@@redux/PROBE_UNKNOWN_ACTION_" +
-      Math.random()
-        .toString(36)
-        .substring(7)
-        .split("")
-        .join(".");
+      Math.random().toString(36).substring(7).split("").join(".");
     if (typeof reducer(undefined, { type: type }) === "undefined") {
       throw new Error(
         'Reducer "' +
@@ -313,7 +309,7 @@ export function combineReducers(reducers) {
 }
 
 function bindActionCreator(actionCreator, dispatch) {
-  return function() {
+  return function () {
     return dispatch(actionCreator.apply(undefined, arguments));
   };
 }
@@ -354,7 +350,7 @@ export function compose() {
   }
 
   if (funcs.length === 0) {
-    return function(arg) {
+    return function (arg) {
       return arg;
     };
   }
@@ -363,8 +359,8 @@ export function compose() {
     return funcs[0];
   }
 
-  return funcs.reduce(function(a, b) {
-    return function() {
+  return funcs.reduce(function (a, b) {
+    return function () {
       return a(b.apply(undefined, arguments));
     };
   });
@@ -379,8 +375,8 @@ export function applyMiddleware() {
     middlewares[_key] = arguments[_key];
   }
 
-  return function(createStore) {
-    return function(reducer, preloadedState, enhancer) {
+  return function (createStore) {
+    return function (reducer, preloadedState, enhancer) {
       var store = createStore(reducer, preloadedState, enhancer);
       var _dispatch = store.dispatch;
       var chain = [];
@@ -389,15 +385,15 @@ export function applyMiddleware() {
         getState: store.getState,
         dispatch: function dispatch(action) {
           return _dispatch(action);
-        }
+        },
       };
-      chain = middlewares.map(function(middleware) {
+      chain = middlewares.map(function (middleware) {
         return middleware(middlewareAPI);
       });
       _dispatch = compose.apply(undefined, chain)(store.dispatch);
 
       return Object.assign({}, store, {
-        dispatch: _dispatch
+        dispatch: _dispatch,
       });
     };
   };

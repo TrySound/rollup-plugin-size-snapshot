@@ -29,8 +29,8 @@ function _inherits(subClass, superClass) {
       value: subClass,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (superClass)
     Object.setPrototypeOf
@@ -38,7 +38,7 @@ function _inherits(subClass, superClass) {
       : (subClass.__proto__ = superClass);
 }
 
-export var MyComp = /*#__PURE__*/ (function(_React$Component) {
+export var MyComp = /*#__PURE__*/ (function (_React$Component) {
   _inherits(MyComp, _React$Component);
 
   function MyComp() {

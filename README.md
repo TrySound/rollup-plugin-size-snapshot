@@ -7,9 +7,9 @@
 
 This plugin provides details about
 
-* actual bundle size (bundler parsing size)
-* minified bundle size (browser parsing size)
-* gzipped bundle size (download size)
+- actual bundle size (bundler parsing size)
+- minified bundle size (browser parsing size)
+- gzipped bundle size (download size)
 
 All of these sizes are important criteria when choosing a library, and they will be stored in the `.size-snapshot.json` file.
 
@@ -22,10 +22,10 @@ import {} from "library";
 
 ## Why bundle with rollup
 
-* internals are hidden so you shouldn't worry that user reuses your frequently updated modules
-* faster user bundling if library has a lot of modules
-* predictable and more efficient scope hoisting and as a result more predictable size
-* easier to work without sourcemaps with vendors since development bundlers add a lot of unreadable stuff in module definition
+- internals are hidden so you shouldn't worry that user reuses your frequently updated modules
+- faster user bundling if library has a lot of modules
+- predictable and more efficient scope hoisting and as a result more predictable size
+- easier to work without sourcemaps with vendors since development bundlers add a lot of unreadable stuff in module definition
 
 ## Usage
 
@@ -36,9 +36,9 @@ export default {
   input: "src/index.js",
   output: {
     file: "dist/index.js",
-    format: "es"
+    format: "es",
   },
-  plugins: [sizeSnapshot()]
+  plugins: [sizeSnapshot()],
 };
 ```
 
@@ -51,7 +51,7 @@ import { sizeSnapshot } from "rollup-plugin-size-snapshot";
 
 export default {
   // ...
-  plugins: [sizeSnapshot(), uglify({ toplevel: true })]
+  plugins: [sizeSnapshot(), uglify({ toplevel: true })],
 };
 ```
 
