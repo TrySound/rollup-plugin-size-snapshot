@@ -48,6 +48,7 @@
     "flow-bin": "^0.125.1",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
+    "jest-matcher-deep-close-to": "^3.0.2",
     "lint-staged": "^10.2.6",
     "prettier": "2.0.5",
     "redux": "^4.0.5",

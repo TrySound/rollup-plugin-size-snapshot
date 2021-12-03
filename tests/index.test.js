@@ -7,6 +7,9 @@ import { terser } from "rollup-plugin-terser";
 import { sizeSnapshot } from "../src";
 import stripAnsi from "strip-ansi";
 
+import { toMatchCloseTo } from 'jest-matcher-deep-close-to';
+expect.extend({ toMatchCloseTo });
+
 process.chdir("tests");
 
 const last = (arr) => arr[Math.max(0, arr.length - 1)];
@@ -394,7 +397,7 @@ test("handle umd with esm", async () => {
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1260 },
+        webpack: expect.toMatchCloseTo({ code: 1260 }, -1)
       },
     },
   });
