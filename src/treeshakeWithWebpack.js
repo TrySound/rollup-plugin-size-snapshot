@@ -28,7 +28,7 @@ export const treeshakeWithWebpack = (code: string): Promise<Output> => {
     // https://webpack.js.org/configuration/node/
     node: false,
     externals: [
-      (context, request, callback) => {
+      ({ context, request }, callback) => {
         if (isReservedId(request)) {
           callback();
         } else {
