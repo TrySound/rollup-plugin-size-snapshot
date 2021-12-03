@@ -68,7 +68,7 @@
     "jest-diff": "^26.0.1",
     "memory-fs": "^0.5.0",
     "terser": "^4.7.0",
-    "webpack": "^4.43.0"
+    "webpack": "^5.64.4"
   },
   "engines": {
     "node": ">=10",
