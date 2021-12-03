@@ -21,12 +21,12 @@ jobs:
         - windows-latest
         - macos-latest
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        # TODO: test on Node.js 17 (+) *after* upgrade to Webpack v5
         node-version:
         - 10.x
         - 12.x
         - 14.x
         - 16.x
+        - 17.x
 
     steps:
     - uses: actions/checkout@v2
