@@ -261,7 +261,7 @@ test("webpack does not provide node shims", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        webpack: { code: 509 },
+        webpack: expect.toMatchCloseTo({ code: 510 }, -1.7), // +/- ~25
       }),
     }),
   });
