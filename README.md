@@ -1,5 +1,7 @@
 # rollup-plugin-size-snapshot
 
+[![npm](https://img.shields.io/npm/v/rollup-plugin-size-snapshot)](https://www.npmjs.com/package/rollup-plugin-size-snapshot)
+
 <img src="example2.png" />
 
 This plugin provides details about
