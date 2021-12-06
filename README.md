@@ -1,7 +1,4 @@
-# rollup-plugin-size-snapshot [![Build Status][travis-img]][travis]
-
-[travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
-[travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
+# rollup-plugin-size-snapshot
 
 <img src="example2.png" />
 
