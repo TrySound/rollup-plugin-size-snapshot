@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "build": "babel src --out-dir dist",
+    "lint-check": "prettier --check --end-of-line=auto ./**/*.{js,md}",
     "test-build": "rm -rf temp && mkdir -p temp && cp -r tests temp && babel src --out-dir temp/src && jest temp/tests",
-    "test": "jest",
+    "test": "jest && yarn lint-check",
     "prepublish": "yarn build"
   },
   "husky": {
