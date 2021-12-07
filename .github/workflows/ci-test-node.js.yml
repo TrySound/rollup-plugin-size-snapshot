@@ -34,5 +34,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         # (with no npm cache)
     - run: yarn
-    - run: npm run build
     - run: npm test
