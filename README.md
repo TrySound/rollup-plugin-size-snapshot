@@ -1,7 +1,6 @@
-# rollup-plugin-size-snapshot [![Build Status][travis-img]][travis]
+# rollup-plugin-size-snapshot
 
-[travis-img]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot.svg
-[travis]: https://travis-ci.org/TrySound/rollup-plugin-size-snapshot
+[![npm](https://img.shields.io/npm/v/rollup-plugin-size-snapshot)](https://www.npmjs.com/package/rollup-plugin-size-snapshot)
 
 <img src="example2.png" />
 
@@ -59,14 +58,14 @@ export default {
 
 ### snapshotPath
 
-type: `string`  
+type: `string`
 default: `'.size-snapshot.json'`
 
 ### matchSnapshot
 
 This option allows you to verify that contributors don't forget to build or commit the `.size-snapshot.json` file. If this is `true`, the plugin will validate the snapshot against an existing one. Typically, one would define this option's value as true during continuous integration; [using it locally is unintended](https://github.com/TrySound/rollup-plugin-size-snapshot/issues/33).
 
-type: `boolean`  
+type: `boolean`
 default: `false`
 
 ### threshold
@@ -75,14 +74,14 @@ Possible difference between sizes in actual snapshot and generated one.
 
 Note: Make sense only when `matchSnapshot` is `true`.
 
-type: `number`  
+type: `number`
 default: `0`
 
 ### printInfo
 
 Allows you to disable log to terminal.
 
-type: `boolean`  
+type: `boolean`
 default: `true`
 
 # License

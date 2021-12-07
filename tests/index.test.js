@@ -7,6 +7,9 @@ import { terser } from "rollup-plugin-terser";
 import { sizeSnapshot } from "../src";
 import stripAnsi from "strip-ansi";
 
+import { toMatchCloseTo } from "jest-matcher-deep-close-to";
+expect.extend({ toMatchCloseTo });
+
 process.chdir("tests");
 
 const last = (arr) => arr[Math.max(0, arr.length - 1)];
@@ -169,9 +172,7 @@ test("print sizes with treeshaked size for 'esm' format", async () => {
   expect(arg).toContain(
     "  treeshaked with rollup with production NODE_ENV and minified: 0 B\n"
   );
-  expect(arg).toContain(
-    "  treeshaked with webpack in production mode: 951 B\n"
-  );
+  expect(arg).toContain("  treeshaked with webpack in production mode: 0 B\n");
 
   consoleInfo.mockRestore();
 });
@@ -188,7 +189,7 @@ test("write treeshaked with rollup and webpack sizes for 'esm' format", async ()
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 }),
+        webpack: expect.objectContaining({ code: 0 }),
       },
     }),
   });
@@ -206,7 +207,7 @@ test("treeshake pure annotations with rollup and terser or webpack", async () =>
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 }),
+        webpack: expect.objectContaining({ code: 0 }),
       },
     }),
   });
@@ -225,7 +226,9 @@ test("treeshake with both rollup or webpack and external modules", async () => {
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 14 }),
-        webpack: expect.objectContaining({ code: 1016 }),
+        // [TBD] output size from webpack with Rollup 2.0.0, 2.10.x vs 2.60.x
+        // (seems to be a little higher with Rollup 2.60.x)
+        webpack: expect.toMatchCloseTo({ code: 40 }, -1.33), // +/- ~10
       },
     }),
   });
@@ -243,7 +246,7 @@ test("rollup treeshake should replace NODE_ENV in symmetry to webpack", async ()
     "output.js": expect.objectContaining({
       treeshaked: {
         rollup: expect.objectContaining({ code: 0 }),
-        webpack: expect.objectContaining({ code: 951 }),
+        webpack: expect.objectContaining({ code: 0 }),
       },
     }),
   });
@@ -260,7 +263,7 @@ test("webpack does not provide node shims", async () => {
   expect(pullSnapshot(snapshotPath)).toMatchObject({
     "output.js": expect.objectContaining({
       treeshaked: expect.objectContaining({
-        webpack: { code: 1071 },
+        webpack: expect.toMatchCloseTo({ code: 510 }, -1.7), // +/- ~25
       }),
     }),
   });
@@ -387,15 +390,27 @@ test("handle umd with esm", async () => {
   });
   const snapshot = pullSnapshot(snapshotPath);
 
-  expect(snapshot).toMatchObject({
+  // [TBD] Rollup 2.60.x seems to give smaller output than Rollup 2.0.0 or 2.10.x
+  // **except** with webpack (!!)
+  const expected = {
     "output.js": {
-      bundled: 330,
+      bundled: 300,
       minified: 206,
       gzipped: 139,
       treeshaked: {
         rollup: { code: 162 },
-        webpack: { code: 1260 },
+        // check separately:
+        // webpack: { ... },
       },
     },
-  });
+  };
+  expect(snapshot).toMatchCloseTo(expected, -2); // +/- ~50
+  const webpackExpected = {
+    "output.js": {
+      treeshaked: {
+        webpack: { code: 600 },
+      },
+    },
+  };
+  expect(snapshot).toMatchCloseTo(webpackExpected, -2.3); // +/- ~99
 });
