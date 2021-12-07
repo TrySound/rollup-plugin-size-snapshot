@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "babel src --out-dir dist",
+    "test-build": "rm -rf temp && mkdir -p temp && cp -r tests temp && babel src --out-dir temp/src && jest temp/tests",
     "test": "jest",
     "prepublish": "yarn build"
   },
