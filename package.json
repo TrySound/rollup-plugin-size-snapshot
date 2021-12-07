@@ -46,7 +46,6 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-flow": "^7.16.0",
-    "flow-bin": "^0.125.1",
     "husky": "^4.2.5",
     "jest": "^27.4.3",
     "jest-matcher-deep-close-to": "^3.0.2",
