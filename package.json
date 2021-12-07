@@ -67,7 +67,7 @@
     "bytes": "^3.1.0",
     "chalk": "^4.0.0",
     "gzip-size": "^5.1.1",
-    "jest-diff": "^26.0.1",
+    "jest-diff": "^26.6.2",
     "memory-fs": "^0.5.0",
     "terser": "^4.7.0",
     "webpack": "^5.65.0"
