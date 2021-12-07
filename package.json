@@ -51,7 +51,7 @@
     "jest": "^27.4.3",
     "jest-matcher-deep-close-to": "^3.0.2",
     "lint-staged": "^10.2.6",
-    "prettier": "2.0.5",
+    "prettier": "~2.5.1",
     "redux": "^4.0.5",
     "rollup": "^2.10.8",
     "rollup-plugin-terser": "^6.0.0",
